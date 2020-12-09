@@ -53,13 +53,14 @@ namespace ImageToPuzzle
 			services.AddCors(options =>
 			{
 				options.AddPolicy("TestPolicy", builder => builder
-								   .WithOrigins("http://localhost:4200", "https://localhost:4200")
-								   .AllowAnyHeader()
-								   .AllowAnyMethod());
+					.WithOrigins("http://localhost:4200", "https://localhost:4200")
+					.AllowAnyHeader()
+					.AllowAnyMethod());
 				options.AddPolicy("ProductionPolicy", builder => builder
-								   .WithOrigins("http://u1234490.plsk.regruhosting.ru", "https://u1234490.plsk.regruhosting.ru")
-								   .AllowAnyHeader()
-								   .AllowAnyMethod());
+					.WithOrigins("https://recimage.ru", "http://recimage.ru",
+						"https://www.recimage.ru", "www.http://recimage.ru")
+					.AllowAnyHeader()
+					.AllowAnyMethod());
 			});
 
 			services.AddResponseCompression(options =>
@@ -107,10 +108,7 @@ namespace ImageToPuzzle
 				c.OAuthAppName("Swagger UI");
 			});
 
-			if (env.IsDevelopment())
-			{
-				app.UseHttpsRedirection();
-			}
+			app.UseHttpsRedirection();
 			app.UseRouting();
 			app.UseCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			app.UseEndpoints(endpoints =>

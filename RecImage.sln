@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageToPuzzle", "ImageToPuzzle\ImageToPuzzle.csproj", "{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageConverter", "ImageConverter\ImageConverter.csproj", "{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E8EA81D-81A7-44D3-9E81-B5EF84E0CD8A}
+	EndGlobalSection
+EndGlobal

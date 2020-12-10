@@ -56,15 +56,14 @@ namespace ImageConverter
 
 			using (var clone = (Bitmap)bwImage.Clone())
 			{
-				var bitmapdata = clone.LockBits(new Rectangle(0, 0, clone.Width, clone.Height),
+				var bitmapData = clone.LockBits(new Rectangle(0, 0, clone.Width, clone.Height),
 					System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 				var pixelSize = 4;
-
 
 				for (int j = 0; j < bwImage.Height; j += height)
 				{
 					var ct = new List<ColoredChar>(bwImage.Height);
-					byte* destPixels = (byte*)bitmapdata.Scan0 + (j * bitmapdata.Stride);
+					byte* destPixels = (byte*)bitmapData.Scan0 + (j * bitmapData.Stride);
 
 					for (int i = 0; i < bwImage.Width; i += width)
 					{
@@ -101,6 +100,8 @@ namespace ImageConverter
 					}
 					coloredText.Add(ct);
 				}
+
+				clone.UnlockBits(bitmapData);
 			}
 
 			return coloredText;

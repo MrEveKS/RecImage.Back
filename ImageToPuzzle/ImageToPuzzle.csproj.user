@@ -6,5 +6,6 @@
   <PropertyGroup>
     <ActiveDebugProfile>ImageToPuzzle</ActiveDebugProfile>
     <NameOfLastUsedPublishProfile>FolderProfile</NameOfLastUsedPublishProfile>
+    <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
 </Project>

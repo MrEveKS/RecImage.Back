@@ -109,6 +109,7 @@ namespace ImageToPuzzle
 			});
 
 			app.UseHttpsRedirection();
+			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			app.UseEndpoints(endpoints =>

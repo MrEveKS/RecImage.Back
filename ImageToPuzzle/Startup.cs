@@ -29,6 +29,8 @@ namespace ImageToPuzzle
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
+			services.AddScoped<IResultOprimize, ResultOprimize>();
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo
@@ -108,7 +110,10 @@ namespace ImageToPuzzle
 				c.OAuthAppName("Swagger UI");
 			});
 
-			app.UseHttpsRedirection();
+			if (!env.IsDevelopment())
+			{
+				app.UseHttpsRedirection();
+			}
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");

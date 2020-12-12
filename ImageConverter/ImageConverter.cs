@@ -1,5 +1,4 @@
 ﻿using ImageConverter.Models;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -8,110 +7,86 @@ namespace ImageConverter
 {
 	public class ImageConverter : IImageConverter
 	{
-		private const double MAX_WIDTH = 250d;
-
-		private readonly GenerateFontWeightsNum _generateFontWeightsNum;
-
 		public ImageConverter()
 		{
-			_generateFontWeightsNum = new GenerateFontWeightsNum();
 		}
 
-		public List<List<ColoredChar>> ConvertToChars(Stream imageStream)
+		public RecColor ConvertToChars(Stream imageStream, ConvertOptions options)
 		{
-			return ConvertToChars(imageStream);
-		}
+			var colorStep = (int)options.ColorStep;
+			var pixelSize = 1;
+			var pQ = pixelSize * pixelSize;
 
-		public List<List<ColoredChar>> ConvertToChars(Stream imageStream, int maxWidth)
-		{
-			return ConvertToChars(imageStream, (double)maxWidth);
-		}
+			var colors = new Dictionary<string, int>();
 
-		private List<List<ColoredChar>> ConvertToChars(Stream imageStream, double? maxWidth = null)
-		{
-			List<List<ColoredChar>> coloredText;
-			using (var image = (Bitmap)Bitmap.FromStream(imageStream))
+			using Bitmap image = ((Bitmap)Bitmap.FromStream(imageStream));
+			var size = CalculateNewSize(image, options.Size);
+			var imageResized = ResizeImage(image, size);
+			if (!options.Colored)
 			{
-				var newSize = CalculateNewSize(image, maxWidth);
-				using (var resizedImage = ResizeImage(image, newSize))
-				using (var greyImage = Grayscale(resizedImage))
-				{
-					coloredText = ConvertToASCII(greyImage);
-				}
+				imageResized = Grayscale(imageResized);
 			}
-			_generateFontWeightsNum.Dispose();
-			return coloredText;
-		}
 
-		private unsafe List<List<ColoredChar>> ConvertToASCII(Bitmap bwImage)
-		{
-			var width = 1;
-			var height = 1;
+			var height = imageResized.Height - imageResized.Height % pixelSize;
+			var width = imageResized.Width - imageResized.Width % pixelSize;
 
-			var characters = _generateFontWeightsNum.Generate();
-			var coloredText = new List<List<ColoredChar>>(bwImage.Height);
-
-			int charWidth = characters[0].Image.Width;
-			int charHeight = characters[0].Image.Height;
-
-			using (var clone = (Bitmap)bwImage.Clone())
+			var colCell = new List<List<int>>(height);
+			for (int indexHeight = 0; indexHeight < height; indexHeight += pixelSize)
 			{
-				var bitmapData = clone.LockBits(new Rectangle(0, 0, clone.Width, clone.Height),
-					System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-				var pixelSize = 4;
-
-				for (int j = 0; j < bwImage.Height; j += height)
+				var row = new List<int>(width);
+				for (int indexWidth = 0; indexWidth < width; indexWidth += pixelSize)
 				{
-					var ct = new List<ColoredChar>(bwImage.Height);
-					byte* destPixels = (byte*)bitmapData.Scan0 + (j * bitmapData.Stride);
+					var r = 0;
+					var g = 0;
+					var b = 0;
+					var rowIndex = indexWidth;
+					var colIndex = indexHeight;
 
-					for (int i = 0; i < bwImage.Width; i += width)
+					for (int i = rowIndex; i < rowIndex + pixelSize; i++)
 					{
-						var b = (int)destPixels[i * pixelSize];
-						var g = (int)destPixels[i * pixelSize + 1];
-						var r = (int)destPixels[i * pixelSize + 2];
-						var color = Color.FromArgb(r, g, b);
-
-						double targetvalue = 0;
-
-						for (int nj = j; nj < j + height; nj++)
+						for (int j = colIndex; j < colIndex + pixelSize; j++)
 						{
-							for (int ni = i; ni < i + width; ni++)
-							{
-								if (bwImage.Width > ni && bwImage.Height > nj)
-								{
-									targetvalue += bwImage.GetPixel(ni, nj).R;
-								}
-								else
-								{
-									targetvalue += 128;
-								}
-
-							}
+							Color pixelColor = imageResized.GetPixel(rowIndex, colIndex);
+							r += pixelColor.R;
+							g += pixelColor.G;
+							b += pixelColor.B;
 						}
-						targetvalue /= (width * height);
-						var closestchar = GetClosestchar(characters, targetvalue);
-
-						ct.Add(new ColoredChar
-						{
-							Character = closestchar.Character,
-							WebColor = ColorTranslator.ToHtml(color)
-						});
 					}
-					coloredText.Add(ct);
+
+					var nR = r / pQ;
+					var nG = g / pQ;
+					var nB = b / pQ;
+
+					var color = Color.FromArgb(nR - nR % colorStep, nG - nG % colorStep, nB - nB % colorStep);
+					var webColor = ColorTranslator.ToHtml(color);
+					int index;
+					if (colors.ContainsKey(webColor))
+					{
+						index = colors[webColor];
+					}
+					else
+					{
+						index = colors.Count + 1;
+						colors.Add(webColor, index);
+					}
+
+					row.Add(index);
 				}
-
-				clone.UnlockBits(bitmapData);
+				colCell.Add(row);
 			}
-
-			return coloredText;
+			imageResized.Dispose();
+			return new RecColor()
+			{
+				Cells = colCell,
+				CellsColor = ToCellsColor(colors)
+			};
 		}
 
-		private SizeF CalculateNewSize(Bitmap image, double? maxWidth = null)
+		private SizeF CalculateNewSize(Bitmap image, double maxWidth)
 		{
 			var imageWidth = image.Width;
-			var cof = (maxWidth ?? MAX_WIDTH) / imageWidth;
-			var newWidth = (int)(maxWidth ?? MAX_WIDTH);
+			var cof = maxWidth / imageWidth;
+			var newWidth = (int)maxWidth;
 			var newHeight = (int)(cof * image.Height);
 
 			return new SizeF() { Height = newWidth, Width = newHeight };
@@ -139,34 +114,6 @@ namespace ImageConverter
 			return resizedimage;
 		}
 
-		private WeightedChar GetClosestchar(List<WeightedChar> characters, double targetvalue)
-		{
-			var minWeight = -1d;
-			for (int index = 0; index < characters.Count; index++)
-			{
-				var character = characters[index];
-				var curMin = Math.Abs(character.Weight - targetvalue);
-				if (minWeight == -1 || curMin < minWeight)
-				{
-					minWeight = curMin;
-				}
-			}
-
-			WeightedChar result = null;
-
-			for (int index = 0; index < characters.Count; index++)
-			{
-				var character = characters[index];
-				if (Math.Abs(character.Weight - targetvalue) == minWeight)
-				{
-					result = character;
-					break;
-				}
-			}
-
-			return result;
-		}
-
 		private Bitmap Grayscale(Bitmap image)
 		{
 			var bitmap = new Bitmap(image);
@@ -180,7 +127,18 @@ namespace ImageConverter
 					bitmap.SetPixel(idexWidth, indexHeight, Color.FromArgb(grey, grey, grey));
 				}
 			}
+			image.Dispose();
 			return bitmap;
+		}
+
+		private Dictionary<int, string> ToCellsColor(Dictionary<string, int> colors)
+		{
+			var result = new Dictionary<int, string>(colors.Count);
+			foreach (var color in colors)
+			{
+				result.Add(color.Value, color.Key);
+			}
+			return result;
 		}
 	}
 }

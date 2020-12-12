@@ -29,7 +29,6 @@ namespace ImageToPuzzle
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
-			services.AddScoped<IResultOprimize, ResultOprimize>();
 
 			services.AddSwaggerGen(c =>
 			{

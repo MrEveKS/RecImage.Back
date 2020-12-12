@@ -57,7 +57,7 @@ namespace ImageConverter
 					var nG = g / pQ;
 					var nB = b / pQ;
 
-					var color = Color.FromArgb(nR - nR % colorStep, nG - nG % colorStep, nB - nB % colorStep);
+					var color = GetNewColor(nR, nG, nB, colorStep);
 					var webColor = ColorTranslator.ToHtml(color);
 					int index;
 					if (colors.ContainsKey(webColor))
@@ -80,6 +80,32 @@ namespace ImageConverter
 				Cells = colCell,
 				CellsColor = ToCellsColor(colors)
 			};
+		}
+
+		private Color GetNewColor(int nR, int nG, int nB, int colorStep)
+		{
+			nR = UpdateColor(nR, colorStep);
+			nG = UpdateColor(nG, colorStep);
+			nB = UpdateColor(nB, colorStep);
+
+			return Color.FromArgb(nR, nG, nB);
+		}
+
+		private int UpdateColor(int color, int colorStep)
+		{
+			var white = 248;
+			var lightWhite = 250;
+
+			if (color > white)
+			{
+				color = lightWhite;
+			}
+			else
+			{
+				color = color - color % colorStep;
+			}
+
+			return color;
 		}
 
 		private SizeF CalculateNewSize(Bitmap image, double maxWidth)

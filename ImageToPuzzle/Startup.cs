@@ -54,7 +54,7 @@ namespace ImageToPuzzle
 			services.AddCors(options =>
 			{
 				options.AddPolicy("TestPolicy", builder => builder
-					.WithOrigins("http://localhost:4200", "https://localhost:4200")
+					.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://192.168.0.103:8080")
 					.AllowAnyHeader()
 					.AllowAnyMethod());
 				options.AddPolicy("ProductionPolicy", builder => builder

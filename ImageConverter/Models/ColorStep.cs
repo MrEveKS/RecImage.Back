@@ -3,9 +3,9 @@
 	public enum ColorStep
 	{
 		VerySmall = 30,
-		Small = 20,
-		Middle = 15,
-		Big = 10,
-		VeryBig = 7
+		Small = 24,
+		Middle = 18,
+		Big = 12,
+		VeryBig = 6
 	}
 }

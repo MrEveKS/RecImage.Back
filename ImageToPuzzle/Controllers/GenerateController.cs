@@ -25,7 +25,7 @@ namespace ImageToPuzzle.Controllers
 			Stopwatch stopwatch = Stopwatch.StartNew();
 			using var memoryStream = new MemoryStream();
 			await image.CopyToAsync(memoryStream);
-			var result = _imageConverter.ConvertToChars(memoryStream, options);
+			var result = await _imageConverter.ConvertToChars(memoryStream, options);
 			System.Console.WriteLine($"time: {stopwatch.Elapsed.TotalSeconds}");
 			return result;
 		}

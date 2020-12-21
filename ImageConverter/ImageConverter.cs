@@ -1,17 +1,21 @@
 ﻿using ImageConverter.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ImageConverter
 {
-	public class ImageConverter : IImageConverter
+	public class ImageConverter : IImageConverter, IDisposable
 	{
+		private bool _disposedValue;
+
 		public ImageConverter()
 		{
 		}
 
-		public RecColor ConvertToChars(Stream imageStream, ConvertOptions options)
+		public async Task<RecColor> ConvertToChars(Stream imageStream, ConvertOptions options)
 		{
 			var colorStep = (int)options.ColorStep;
 			var pixelSize = 1;
@@ -19,7 +23,7 @@ namespace ImageConverter
 
 			var colors = new Dictionary<string, int>();
 
-			using Bitmap image = ((Bitmap)Bitmap.FromStream(imageStream));
+			var image = ((Bitmap)Bitmap.FromStream(imageStream));
 			var size = CalculateNewSize(image, options.Size);
 			var imageResized = ResizeImage(image, size);
 			if (!options.Colored)
@@ -75,6 +79,7 @@ namespace ImageConverter
 				colCell.Add(row);
 			}
 			imageResized.Dispose();
+			await imageStream.DisposeAsync();
 			return new RecColor()
 			{
 				Cells = colCell,
@@ -136,7 +141,7 @@ namespace ImageConverter
 				var newHeigth = (int)(resizeHeight * image.Height);
 				resizedimage = new Bitmap(image, new Size(newWidth, newHeigth));
 			}
-
+			image.Dispose();
 			return resizedimage;
 		}
 
@@ -165,6 +170,25 @@ namespace ImageConverter
 				result.Add(color.Value, color.Key);
 			}
 			return result;
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposedValue)
+			{
+				if (disposing)
+				{
+					GC.Collect(GC.MaxGeneration);
+				}
+
+				_disposedValue = true;
+			}
+		}
+
+		void IDisposable.Dispose()
+		{
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
 		}
 	}
 }

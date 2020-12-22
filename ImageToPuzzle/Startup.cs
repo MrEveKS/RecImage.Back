@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using ImageConverter;
 using ImageToPuzzle.Errors;
+using ImageToPuzzle.Infrastructure.Logging;
 using ImageToPuzzle.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace ImageToPuzzle
 {
@@ -28,8 +30,6 @@ namespace ImageToPuzzle
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
-
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo
@@ -84,6 +84,10 @@ namespace ImageToPuzzle
 						});
 			});
 
+			services.AddSingleton(Configuration);
+			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
+			services.AddScoped<IActionLoger, ActionLoger>();
+
 			services.AddMvcCore()
 				.AddNewtonsoftJson()
 				.AddApiExplorer();
@@ -114,6 +118,9 @@ namespace ImageToPuzzle
 				app.UseHttpsRedirection();
 			}
 			app.UseStaticFiles();
+
+			app.UseSerilogRequestLogging();
+
 			app.UseRouting();
 			app.UseCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			app.UseEndpoints(endpoints =>

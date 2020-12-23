@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ImageConverter;
+using ImageToPuzzle.Common.Constants;
 using ImageToPuzzle.Errors;
 using ImageToPuzzle.Infrastructure.Logging;
 using ImageToPuzzle.Services;
@@ -30,6 +31,21 @@ namespace ImageToPuzzle
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddCors(options =>
+			{
+				options.AddPolicy("TestPolicy", builder => builder
+					.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://192.168.0.103:8080")
+					.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader());
+				options.AddPolicy("ProductionPolicy", builder => builder
+					.WithOrigins("https://recimage.ru", "http://recimage.ru",
+						"https://www.recimage.ru", "http://www.recimage.ru")
+					.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader());
+			});
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo
@@ -49,19 +65,6 @@ namespace ImageToPuzzle
 				{
 					c.IncludeXmlComments(xmlPath);
 				}
-			});
-
-			services.AddCors(options =>
-			{
-				options.AddPolicy("TestPolicy", builder => builder
-					.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://192.168.0.103:8080")
-					.AllowAnyHeader()
-					.AllowAnyMethod());
-				options.AddPolicy("ProductionPolicy", builder => builder
-					.WithOrigins("https://recimage.ru", "http://recimage.ru",
-						"https://www.recimage.ru", "www.http://recimage.ru")
-					.AllowAnyHeader()
-					.AllowAnyMethod());
 			});
 
 			services.AddResponseCompression(options =>
@@ -99,6 +102,11 @@ namespace ImageToPuzzle
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			else
+			{
+				app.UseExceptionHandler("/error");
+				app.UseHsts();
+			}
 
 			app.UseResponseCompression();
 			app.UseSwagger();
@@ -118,7 +126,6 @@ namespace ImageToPuzzle
 				app.UseHttpsRedirection();
 			}
 			app.UseStaticFiles();
-
 			app.UseSerilogRequestLogging();
 
 			app.UseRouting();
@@ -128,6 +135,14 @@ namespace ImageToPuzzle
 				endpoints.MapControllers().RequireCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			});
 
+			app.Map("/error", ap => ap.Run(async context =>
+			{
+				context.Response.ContentType = "application/json";
+				var response = JsonConvert.SerializeObject(new ErrorResponse("Exception", context.Response.StatusCode));
+				await context.Response
+					.WriteAsync(response).ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
+			}));
+
 			app.UseStatusCodePages(async context =>
 			{
 				context.HttpContext.Response.ContentType = "application/json";
@@ -135,10 +150,11 @@ namespace ImageToPuzzle
 
 				if (context.HttpContext.Response.StatusCode == 404)
 				{
-					response = JsonConvert.SerializeObject(new ErrorResponse("404 - Page not found."));
+					response = JsonConvert.SerializeObject(new ErrorResponse("Page not found", 404));
 				}
 
-				await context.HttpContext.Response.WriteAsync(response).ConfigureAwait(false);
+				await context.HttpContext.Response
+					.WriteAsync(response).ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
 			});
 		}
 	}

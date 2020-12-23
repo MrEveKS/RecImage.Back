@@ -1,8 +1,5 @@
-﻿using ImageToPuzzle.Infrastructure;
-using ImageToPuzzle.Infrastructure.Logging;
-using Microsoft.ApplicationInsights.Extensibility;
+﻿using ImageToPuzzle.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Telegram;

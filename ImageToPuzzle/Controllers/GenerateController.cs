@@ -49,7 +49,6 @@ namespace ImageToPuzzle.Controllers
 				_loger.ErrorObject(ex, image);
 				throw;
 			}
-
 		}
 	}
 }

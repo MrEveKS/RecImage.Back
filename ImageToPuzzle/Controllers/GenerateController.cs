@@ -1,12 +1,11 @@
-﻿using ImageConverter;
-using ImageConverter.Models;
-using ImageToPuzzle.Common.Constants;
+﻿using ImageConverter.Models;
 using ImageToPuzzle.Infrastructure.Logging;
+using ImageToPuzzle.Models;
+using ImageToPuzzle.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace ImageToPuzzle.Controllers
@@ -14,10 +13,10 @@ namespace ImageToPuzzle.Controllers
 	[Route("api/[controller]/[action]")]
 	public class GenerateController : Controller
 	{
-		private readonly IImageConverter _imageConverter;
+		private readonly IImageToPointService _imageConverter;
 		private readonly IActionLoger _loger;
 
-		public GenerateController(IImageConverter imageConverter, IActionLoger loger)
+		public GenerateController(IImageToPointService imageConverter, IActionLoger loger)
 		{
 			_imageConverter = imageConverter;
 			_loger = loger;
@@ -30,23 +29,37 @@ namespace ImageToPuzzle.Controllers
 		/// <param name="options"> image setting for converter options </param>
 		/// <returns></returns>
 		[HttpPost]
-		public async Task<RecColor> ConvertToChar([FromForm] IFormFile image, [FromForm] ConvertOptions options)
+		public async Task<RecColor> ConvertToPoints([FromForm] IFormFile image, [FromForm] ConvertOptions options)
 		{
 			try
 			{
 				_loger.InformationObject(options);
 				Stopwatch stopwatch = Stopwatch.StartNew();
-				using var memoryStream = new MemoryStream();
-				await image.CopyToAsync(memoryStream)
-					.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
-				var result = await _imageConverter.ConvertToChars(memoryStream, options)
-					.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
-				_loger.Information("time", stopwatch.Elapsed.TotalSeconds);
+				var result = await _imageConverter.ConvertFromFile(image, options);
+				_loger.Information("ConvertToPoints time", stopwatch.Elapsed.TotalSeconds);
 				return result;
 			}
 			catch (Exception ex)
 			{
 				_loger.ErrorObject(ex, image);
+				throw;
+			}
+		}
+
+		[HttpPost]
+		public async Task<RecColor> ConvertToPointsByFileName([FromForm] ConvertFromNameOptions options)
+		{
+			try
+			{
+				_loger.InformationObject(options);
+				Stopwatch stopwatch = Stopwatch.StartNew();
+				var result = await _imageConverter.ConvertFromFileName(options);
+				_loger.Information("ConvertToPointsByFileName time", stopwatch.Elapsed.TotalSeconds);
+				return result;
+			}
+			catch (Exception ex)
+			{
+				_loger.ErrorObject(ex, options);
 				throw;
 			}
 		}

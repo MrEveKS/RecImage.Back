@@ -90,6 +90,8 @@ namespace ImageToPuzzle
 			services.AddSingleton(Configuration);
 			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
 			services.AddScoped<IActionLoger, ActionLoger>();
+			services.AddScoped<IImageToPointService, ImageToPointService>();
+			services.AddScoped<IGetImagesService, GetImagesService>();
 
 			services.AddMvcCore()
 				.AddNewtonsoftJson()

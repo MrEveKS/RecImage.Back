@@ -30,6 +30,11 @@ namespace ImageToPuzzle.Infrastructure.Logging
 				message, typeof(T), nameof(obj), JsonConvert.SerializeObject(obj));
 		}
 
+		public void Error(Exception exception, string message)
+		{
+			_loger.Error(exception, "message: {MSG}", message);
+		}
+
 		public void ErrorObject<T>(Exception exception, T obj)
 		{
 			switch (obj)

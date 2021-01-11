@@ -8,13 +8,14 @@ using Xunit;
 using ImageToPuzzle.Infrastructure.Logging;
 using System;
 using ImageToPuzzle.Services;
+using ImageToPuzzle.Models;
 
 namespace ImageToPuzzle.Test
 {
 	public class ImageConvertFromControll
 	{
 		[Fact]
-		public async Task ConvertToChar_MemoryTest()
+		public async Task ConvertToPoint_MemoryTest()
 		{
 			var convertOptions = new ConvertOptions()
 			{
@@ -41,7 +42,7 @@ namespace ImageToPuzzle.Test
 		}
 
 		[Fact]
-		public async Task ConvertToChar_NullExceptionTest()
+		public async Task ConvertToPoint_NullExceptionTest()
 		{
 			var convertOptions = new ConvertOptions()
 			{
@@ -54,6 +55,26 @@ namespace ImageToPuzzle.Test
 			var imageToPointConverter = new ImageToPointService(imageConverter);
 			var controller = new GenerateController(imageToPointConverter, loger);
 			await Assert.ThrowsAsync<NullReferenceException>(async () => await controller.ConvertToPoints(null, convertOptions));
+		}
+
+		[Fact]
+		public void ConvertToPoint_ByFileName()
+		{
+			var convertOptions = new ConvertFromNameOptions()
+			{
+				Colored = true,
+				ColorStep = ColorStep.VeryBig,
+				Size = 300,
+				FileName = "test_image.jpg"
+			};
+
+			var loger = new Mock<IActionLoger>().Object;
+			using var imageConverter = new ImageConverter.ImageConverter();
+			var imageToPointConverter = new ImageToPointService(imageConverter);
+			var controller = new GenerateController(imageToPointConverter, loger);
+			var result = controller.ConvertToPointsByFileName(convertOptions);
+
+			Assert.NotNull(result);
 		}
 	}
 }

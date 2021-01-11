@@ -14,7 +14,7 @@ namespace ImageToPuzzle.Services
 				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImagePath));
 			var files = directoryInfo.GetFiles();
 			return files
-				.OrderBy(f => f)
+				.OrderBy(f => f.Name)
 				.Select((f, i) => new ImageListItem()
 				{
 					Id = i + 1,

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using ImageToPuzzle.Infrastructure.Logging;
 using System;
+using ImageToPuzzle.Services;
 
 namespace ImageToPuzzle.Test
 {
@@ -23,16 +24,17 @@ namespace ImageToPuzzle.Test
 			};
 			var loger = new Mock<IActionLoger>().Object;
 
-			var iterations = 5;
+			var iterations = 10;
 			for (int index = 0; index < iterations; index++)
 			{
 				using var imageConverter = new ImageConverter.ImageConverter();
-				var controller = new GenerateController(imageConverter, loger);
+				var imageToPointConverter = new ImageToPointService(imageConverter);
+				var controller = new GenerateController(imageToPointConverter, loger);
 				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\test_image.jpg");
 				using var stream = new MemoryStream(File.ReadAllBytes(filePath));
 				var formFile = new FormFile(stream, 0, stream.Length, "name", "test_image.jpg");
 
-				var result = await controller.ConvertToChar(formFile, convertOptions);
+				var result = await controller.ConvertToPoints(formFile, convertOptions);
 
 				Assert.NotNull(result);
 			}
@@ -49,8 +51,9 @@ namespace ImageToPuzzle.Test
 			};
 			var loger = new Mock<IActionLoger>().Object;
 			using var imageConverter = new ImageConverter.ImageConverter();
-			var controller = new GenerateController(imageConverter, loger);
-			await Assert.ThrowsAsync<NullReferenceException>(async () => await controller.ConvertToChar(null, convertOptions));
+			var imageToPointConverter = new ImageToPointService(imageConverter);
+			var controller = new GenerateController(imageToPointConverter, loger);
+			await Assert.ThrowsAsync<NullReferenceException>(async () => await controller.ConvertToPoints(null, convertOptions));
 		}
 	}
 }

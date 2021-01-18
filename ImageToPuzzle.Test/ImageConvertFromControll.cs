@@ -24,12 +24,13 @@ namespace ImageToPuzzle.Test
 				Size = 300
 			};
 			var loger = new Mock<IActionLoger>().Object;
+			var imagesService = new Mock<IGetImagesService>().Object;
 
 			var iterations = 10;
 			for (int index = 0; index < iterations; index++)
 			{
 				using var imageConverter = new ImageConverter.ImageConverter();
-				var imageToPointConverter = new ImageToPointService(imageConverter);
+				var imageToPointConverter = new ImageToPointService(imageConverter, imagesService);
 				var controller = new GenerateController(imageToPointConverter, loger);
 				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files\\test_image.jpg");
 				using var stream = new MemoryStream(File.ReadAllBytes(filePath));
@@ -51,8 +52,9 @@ namespace ImageToPuzzle.Test
 				Size = 300
 			};
 			var loger = new Mock<IActionLoger>().Object;
+			var imagesService = new Mock<IGetImagesService>().Object;
 			using var imageConverter = new ImageConverter.ImageConverter();
-			var imageToPointConverter = new ImageToPointService(imageConverter);
+			var imageToPointConverter = new ImageToPointService(imageConverter, imagesService);
 			var controller = new GenerateController(imageToPointConverter, loger);
 			await Assert.ThrowsAsync<NullReferenceException>(async () => await controller.ConvertToPoints(null, convertOptions));
 		}
@@ -65,14 +67,15 @@ namespace ImageToPuzzle.Test
 				Colored = true,
 				ColorStep = ColorStep.VeryBig,
 				Size = 300,
-				FileName = "test_image.jpg"
+				ImageId = 1
 			};
 
 			var loger = new Mock<IActionLoger>().Object;
+			var imagesService = new Mock<IGetImagesService>().Object;
 			using var imageConverter = new ImageConverter.ImageConverter();
-			var imageToPointConverter = new ImageToPointService(imageConverter);
+			var imageToPointConverter = new ImageToPointService(imageConverter, imagesService);
 			var controller = new GenerateController(imageToPointConverter, loger);
-			var result = controller.ConvertToPointsByFileName(convertOptions);
+			var result = controller.ConvertToPointsById(convertOptions);
 
 			Assert.NotNull(result);
 		}

@@ -47,7 +47,7 @@ namespace ImageToPuzzle.Controllers
 		}
 
 		[HttpPost]
-		public async Task<RecColor> ConvertToPointsByFileName([FromForm] ConvertFromNameOptions options)
+		public async Task<RecColor> ConvertToPointsById([FromBody] ConvertFromNameOptions options)
 		{
 			try
 			{

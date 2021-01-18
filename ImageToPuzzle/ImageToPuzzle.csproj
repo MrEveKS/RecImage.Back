@@ -8,13 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="logs\**" />
-    <Compile Remove="wwwroot\image-list\min\**" />
     <Content Remove="logs\**" />
-    <Content Remove="wwwroot\image-list\min\**" />
     <EmbeddedResource Remove="logs\**" />
-    <EmbeddedResource Remove="wwwroot\image-list\min\**" />
     <None Remove="logs\**" />
-    <None Remove="wwwroot\image-list\min\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +35,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageConverter\ImageConverter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\image-list\min\" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">

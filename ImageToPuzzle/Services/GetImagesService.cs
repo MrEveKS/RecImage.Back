@@ -11,7 +11,7 @@ namespace ImageToPuzzle.Services
 		public List<ImageListItem> GetList()
 		{
 			var directoryInfo = new DirectoryInfo(
-				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImagePath));
+				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
 			var files = directoryInfo.GetFiles();
 			return files
 				.OrderBy(f => f.Name)

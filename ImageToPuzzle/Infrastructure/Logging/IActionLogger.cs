@@ -2,7 +2,7 @@
 
 namespace ImageToPuzzle.Infrastructure.Logging
 {
-	public interface IActionLoger
+	public interface IActionLogger
 	{
 		void Error(Exception exception, string message);
 		void ErrorObject<T>(Exception exception, T obj);

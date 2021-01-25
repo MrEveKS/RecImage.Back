@@ -11,15 +11,16 @@ using System.Threading.Tasks;
 namespace ImageToPuzzle.Controllers
 {
 	[Route("api/[controller]/[action]")]
+	[Produces("application/json")]
 	public class GenerateController : Controller
 	{
 		private readonly IImageToPointService _imageConverter;
-		private readonly IActionLoger _loger;
+		private readonly IActionLogger _logger;
 
-		public GenerateController(IImageToPointService imageConverter, IActionLoger loger)
+		public GenerateController(IImageToPointService imageConverter, IActionLogger logger)
 		{
 			_imageConverter = imageConverter;
-			_loger = loger;
+			_logger = logger;
 		}
 
 		/// <summary>
@@ -29,37 +30,37 @@ namespace ImageToPuzzle.Controllers
 		/// <param name="options"> image setting for converter options </param>
 		/// <returns></returns>
 		[HttpPost]
-		public async Task<RecColor> ConvertToPoints([FromForm] IFormFile image, [FromForm] ConvertOptions options)
+		public async Task<JsonResult> ConvertToPoints([FromForm] IFormFile image, [FromForm] ConvertOptions options)
 		{
 			try
 			{
-				_loger.InformationObject(options);
+				_logger.InformationObject(options);
 				Stopwatch stopwatch = Stopwatch.StartNew();
 				var result = await _imageConverter.ConvertFromFile(image, options);
-				_loger.Information("ConvertToPoints time", stopwatch.Elapsed.TotalSeconds);
-				return result;
+				_logger.Information("ConvertToPoints time", stopwatch.Elapsed.TotalMilliseconds);
+				return new JsonResult(result);
 			}
 			catch (Exception ex)
 			{
-				_loger.ErrorObject(ex, image);
+				_logger.ErrorObject(ex, image);
 				throw;
 			}
 		}
 
 		[HttpPost]
-		public async Task<RecColor> ConvertToPointsById([FromBody] ConvertFromNameOptions options)
+		public async Task<JsonResult> ConvertToPointsById([FromBody] ConvertFromNameOptions options)
 		{
 			try
 			{
-				_loger.InformationObject(options);
+				_logger.InformationObject(options);
 				Stopwatch stopwatch = Stopwatch.StartNew();
 				var result = await _imageConverter.ConvertFromFileName(options);
-				_loger.Information("ConvertToPointsByFileName time", stopwatch.Elapsed.TotalSeconds);
-				return result;
+				_logger.Information("ConvertToPointsByFileName time", stopwatch.Elapsed.TotalMilliseconds);
+				return new JsonResult(result);
 			}
 			catch (Exception ex)
 			{
-				_loger.ErrorObject(ex, options);
+				_logger.ErrorObject(ex, options);
 				throw;
 			}
 		}

@@ -5,34 +5,34 @@ using System;
 
 namespace ImageToPuzzle.Infrastructure.Logging
 {
-	public class ActionLoger : IActionLoger
+	public class ActionLogger : IActionLogger
 	{
-		private readonly ILogger _loger;
+		private readonly ILogger _logger;
 
-		public ActionLoger()
+		public ActionLogger()
 		{
-			_loger = Log.Logger;
+			_logger = Log.Logger;
 		}
 
 		public void Information(string message, object value)
 		{
-			_loger.Information("{MESSAGE}: {VALUE}", message, value);
+			_logger.Information("{MESSAGE}: {VALUE}", message, value);
 		}
 
 		public void InformationObject<T>(T obj)
 		{
-			_loger.Information("{@TYPE} {NAME}: {VALUE}", typeof(T), nameof(obj), JsonConvert.SerializeObject(obj));
+			_logger.Information("{@TYPE} {NAME}: {VALUE}", typeof(T), nameof(obj), JsonConvert.SerializeObject(obj));
 		}
 
 		public void InformationObject<T>(string message, T obj)
 		{
-			_loger.Information("{MESSAGE}: {@TYPE} {NAME}: {VALUE}",
+			_logger.Information("{MESSAGE}: {@TYPE} {NAME}: {VALUE}",
 				message, typeof(T), nameof(obj), JsonConvert.SerializeObject(obj));
 		}
 
 		public void Error(Exception exception, string message)
 		{
-			_loger.Error(exception, "message: {MSG}", message);
+			_logger.Error(exception, "message: {MSG}", message);
 		}
 
 		public void ErrorObject<T>(Exception exception, T obj)
@@ -40,20 +40,20 @@ namespace ImageToPuzzle.Infrastructure.Logging
 			switch (obj)
 			{
 				case null:
-					_loger.Error(exception, "{@TYPE} {NAME}: {VALUE}", typeof(T), nameof(obj), "value is null");
+					_logger.Error(exception, "{@TYPE} {NAME}: {VALUE}", typeof(T), nameof(obj), "value is null");
 					break;
 				case IFormFile formFile:
 					ErrorFormFile(exception, formFile);
 					break;
 				default:
-					_loger.Error(exception, "{@TYPE} {NAME}", typeof(T), nameof(obj));
+					_logger.Error(exception, "{@TYPE} {NAME}", typeof(T), nameof(obj));
 					break;
 			}
 		}
 
 		private void ErrorFormFile(Exception exception, IFormFile formFile)
 		{
-			_loger.Error(exception, "{@TYPE} {NAME}: ContentType: {CONTENT_TYPE}, FileName: {FILE_NAME}, Length: {LENGTH}",
+			_logger.Error(exception, "{@TYPE} {NAME}: ContentType: {CONTENT_TYPE}, FileName: {FILE_NAME}, Length: {LENGTH}",
 				typeof(IFormFile), nameof(formFile), formFile.ContentType, formFile.FileName, formFile.Length);
 		}
 	}

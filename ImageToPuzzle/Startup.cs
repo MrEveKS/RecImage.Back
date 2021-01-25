@@ -1,11 +1,13 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using ImageConverter;
 using ImageToPuzzle.Common.Constants;
 using ImageToPuzzle.Errors;
 using ImageToPuzzle.Infrastructure.Logging;
+using ImageToPuzzle.Infrastructure.Providers;
 using ImageToPuzzle.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -67,6 +69,11 @@ namespace ImageToPuzzle
 				}
 			});
 
+			services.Configure<GzipCompressionProviderOptions>
+				(options => options.Level = CompressionLevel.Optimal);
+			services.Configure<BrotliCompressionProviderOptions>
+				(options => options.Level = CompressionLevel.Optimal);
+
 			services.AddResponseCompression(options =>
 			{
 				options.EnableForHttps = true;
@@ -89,12 +96,14 @@ namespace ImageToPuzzle
 
 			services.AddSingleton(Configuration);
 			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
-			services.AddScoped<IActionLoger, ActionLoger>();
+			services.AddScoped<IActionLogger, ActionLogger>();
 			services.AddScoped<IImageToPointService, ImageToPointService>();
 			services.AddScoped<IGetImagesService, GetImagesService>();
 
-			services.AddMvcCore()
-				.AddNewtonsoftJson()
+			services.AddMvcCore(options =>
+			{
+				options.RespectBrowserAcceptHeader = true;
+			})
 				.AddApiExplorer();
 		}
 
@@ -134,7 +143,8 @@ namespace ImageToPuzzle
 			app.UseCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers().RequireCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
+				endpoints.MapControllers()
+					.RequireCors(env.IsDevelopment() ? "TestPolicy" : "ProductionPolicy");
 			});
 
 			app.Map("/error", ap => ap.Run(async context =>

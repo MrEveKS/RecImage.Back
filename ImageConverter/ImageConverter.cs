@@ -15,6 +15,12 @@ namespace ImageConverter
 		{
 		}
 
+		/// <summary>
+		/// Convert image to point color object
+		/// </summary>
+		/// <param name="imageStream"></param>
+		/// <param name="options"></param>
+		/// <returns></returns>
 		public async Task<RecColor> ConvertToChars(Stream imageStream, ConvertOptions options)
 		{
 			var colorStep = (int)options.ColorStep;

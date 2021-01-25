@@ -11,14 +11,14 @@ namespace ImageToPuzzle.Test
 		[Fact]
 		public void GetAll_Test()
 		{
-			var loger = new Mock<IActionLoger>().Object;
+			var logger = new Mock<IActionLogger>().Object;
 			var imagesService = new GetImagesService();
-			var imagesConstroller = new ImagesController(imagesService, loger);
+			var imagesConstroller = new ImagesController(imagesService, logger);
 
 			var files = imagesConstroller.GetAll();
 
 			Assert.NotNull(files);
-			Assert.True(files.Count > 0);
+			Assert.True(files.Value.ToString().Length > 0);
 		}
 	}
 }

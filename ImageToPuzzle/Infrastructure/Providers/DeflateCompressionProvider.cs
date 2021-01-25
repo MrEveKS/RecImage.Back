@@ -2,9 +2,9 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Infrastructure.Providers
 {
-	public class DeflateCompressionProvider : ICompressionProvider
+	internal sealed class DeflateCompressionProvider : ICompressionProvider
 	{
 		public string EncodingName => "deflate";
 		public bool SupportsFlush => true;

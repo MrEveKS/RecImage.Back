@@ -40,9 +40,15 @@ namespace ImageToPuzzle
 					.AllowAnyOrigin()
 					.AllowAnyMethod()
 					.AllowAnyHeader());
-				options.AddPolicy("ProductionPolicy", builder => builder
+				/*options.AddPolicy("ProductionPolicy", builder => builder
 					.WithOrigins("https://recimage.ru", "http://recimage.ru",
 						"https://www.recimage.ru", "http://www.recimage.ru")
+					.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader());*/
+				options.AddPolicy("ProductionPolicy", builder => builder
+					.WithOrigins("https://test.recimage.ru", "http://test.recimage.ru",
+						"https://www.test.recimage.ru", "http://www.test.recimage.ru")
 					.AllowAnyOrigin()
 					.AllowAnyMethod()
 					.AllowAnyHeader());
@@ -134,7 +140,7 @@ namespace ImageToPuzzle
 
 			if (!env.IsDevelopment())
 			{
-				app.UseHttpsRedirection();
+				// app.UseHttpsRedirection();
 			}
 			app.UseStaticFiles();
 			app.UseSerilogRequestLogging();

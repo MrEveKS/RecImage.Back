@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Unit Tests
-      run: dotnet test ImageToPuzzle.Test --verbosity normal
+      run: dotnet test ImageToPuzzle.Test --no-build --verbosity normal

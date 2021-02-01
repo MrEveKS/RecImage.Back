@@ -8,7 +8,7 @@ namespace ImageToPuzzle.Test
 {
 	public class ImagesControllerTest
 	{
-		[Fact]
+		[Fact (Skip = "Local Test")]
 		public void GetAll_Test()
 		{
 			var logger = new Mock<IActionLogger>().Object;

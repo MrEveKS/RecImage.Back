@@ -26,16 +26,4 @@
     <ProjectReference Include="..\ImageToPuzzle\ImageToPuzzle.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Files\*.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="wwwroot\image-list\min\test_image.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -6,5 +6,6 @@ namespace ImageToPuzzle.Services
 	public interface IGetImagesService
 	{
 		List<ImageListItem> GetList();
+		int GetRandomId();
 	}
 }

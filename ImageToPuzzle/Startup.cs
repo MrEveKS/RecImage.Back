@@ -90,7 +90,8 @@ namespace ImageToPuzzle
 							"text/html",
 							"text/json",
 							"text/plain",
-							"text/xml"
+							"text/xml",
+							"image/png"
 						});
 			});
 

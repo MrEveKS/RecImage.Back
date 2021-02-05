@@ -31,7 +31,24 @@ namespace ImageToPuzzle.Controllers
 			}
 			catch (Exception ex)
 			{
-				_logger.Error(ex, "Images GetAll");
+				_logger.Error(ex, nameof(ImagesController.GetAll));
+				throw;
+			}
+		}
+
+		[HttpPost]
+		public JsonResult GetRandomId()
+		{
+			try
+			{
+				Stopwatch stopwatch = Stopwatch.StartNew();
+				var result = _imagesService.GetRandomId();
+				_logger.Information("GetRandomId time", stopwatch.Elapsed.TotalSeconds);
+				return new JsonResult(result);
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, nameof(ImagesController.GetRandomId));
 				throw;
 			}
 		}

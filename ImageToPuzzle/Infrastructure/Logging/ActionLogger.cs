@@ -51,6 +51,12 @@ namespace ImageToPuzzle.Infrastructure.Logging
 			}
 		}
 
+		public void FatalObjectMessage<T>(string message, T obj)
+		{
+			_logger.Fatal("{MESSAGE}: {@TYPE} {NAME}: {VALUE}",
+				message, typeof(T), nameof(obj), JsonConvert.SerializeObject(obj));
+		}
+
 		private void ErrorFormFile(Exception exception, IFormFile formFile)
 		{
 			_logger.Error(exception, "{@TYPE} {NAME}: ContentType: {CONTENT_TYPE}, FileName: {FILE_NAME}, Length: {LENGTH}",

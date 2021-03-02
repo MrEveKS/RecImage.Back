@@ -24,7 +24,7 @@ namespace ImageToPuzzle
 {
 	public class Startup
 	{
-		public IConfiguration Configuration { get; }
+		private IConfiguration Configuration { get; }
 
 		public Startup(IConfiguration configuration)
 		{

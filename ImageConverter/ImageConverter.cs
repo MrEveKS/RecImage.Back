@@ -30,7 +30,7 @@ namespace ImageConverter
 			var imageResized = ResizeImage(image, size);
 			if (!options.Colored)
 			{
-				imageResized = Grayscale(imageResized);
+				imageResized = GrayScale(imageResized);
 			}
 
 			var height = imageResized.Height - imageResized.Height % pixelSize;
@@ -108,7 +108,7 @@ namespace ImageConverter
 			}
 			else
 			{
-				color = color - color % colorStep;
+				color -= color % colorStep;
 			}
 
 			return color;
@@ -146,7 +146,7 @@ namespace ImageConverter
 			return resizedImage;
 		}
 
-		private static Bitmap Grayscale(Image image)
+		private static Bitmap GrayScale(Image image)
 		{
 			var bitmap = new Bitmap(image);
 			for (var indexWidth = 0; indexWidth < bitmap.Width; indexWidth++)

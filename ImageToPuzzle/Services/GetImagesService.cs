@@ -1,34 +1,41 @@
-﻿using ImageToPuzzle.Common.Constants;
-using ImageToPuzzle.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ImageToPuzzle.Common.Constants;
+using ImageToPuzzle.Models;
 
 namespace ImageToPuzzle.Services
 {
 	public class GetImagesService : IGetImagesService
 	{
+		private readonly IDirectoryService _directoryService;
+
+		public GetImagesService(IDirectoryService directoryService)
+		{
+			_directoryService = directoryService;
+		}
+
 		public List<ImageListItem> GetList()
 		{
-			var directoryInfo = new DirectoryInfo(
-				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
-			var files = directoryInfo.GetFiles();
+			var files = _directoryService.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
+
 			return files
 				.OrderBy(f => f.Name)
-				.Select((f, i) => new ImageListItem()
+				.Select((f, i) => new ImageListItem
 				{
 					Id = i + 1,
 					Name = f.Name
-				}).ToList();
+				})
+				.ToList();
 		}
 
 		public int GetRandomId()
 		{
 			var random = new Random();
-			var directoryInfo = new DirectoryInfo(
-				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
-			var filesCount = directoryInfo.GetFiles().Length;
+			var files = _directoryService.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
+			var filesCount = files.Length;
+
 			return random.Next(0, filesCount) + 1;
 		}
 	}

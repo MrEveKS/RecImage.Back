@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageToPuzzle", "ImageToPuz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageConverter", "ImageConverter\ImageConverter.csproj", "{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageToPuzzle.Test", "ImageToPuzzle.Test\ImageToPuzzle.Test.csproj", "{4ACB91EE-0D62-45AD-BCED-070A3453913C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageToPuzzle.Test", "ImageToPuzzle.Test\ImageToPuzzle.Test.csproj", "{4ACB91EE-0D62-45AD-BCED-070A3453913C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C501F79-77F6-4080-9ABE-9AA4EDD22B34}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

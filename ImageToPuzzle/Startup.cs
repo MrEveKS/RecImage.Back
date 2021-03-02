@@ -101,8 +101,10 @@ namespace ImageToPuzzle
 			});
 
 			services.AddSingleton(Configuration);
+			services.AddScoped<IFileService, FileService>();
+			services.AddScoped<IDirectoryService, DirectoryService>();
 			services.AddScoped<IImageConverter, ImageConverter.ImageConverter>();
-			services.AddScoped<IActionLogger, ActionLogger>();
+            services.AddScoped<IActionLogger, ActionLogger>();
 			services.AddScoped<IImageToPointService, ImageToPointService>();
 			services.AddScoped<IGetImagesService, GetImagesService>();
 

@@ -14,8 +14,6 @@ namespace ImageToPuzzle.Test
 {
 	public class ImageConvertFromController
 	{
-		private readonly ImageGenerate _imageGenerate = new ImageGenerate();
-
 		[Fact]
 		public async Task ConvertToPoint_MemoryTest()
 		{

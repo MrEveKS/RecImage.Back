@@ -33,6 +33,8 @@ namespace ImageToPuzzle
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			var isDevelop = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
 			services.AddCors(options =>
 			{
 				options.AddPolicy("TestPolicy", builder => builder
@@ -48,26 +50,29 @@ namespace ImageToPuzzle
 					.AllowAnyHeader());
 			});
 
-			services.AddSwaggerGen(c =>
+			if (isDevelop)
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo
+				services.AddSwaggerGen(c =>
 				{
-					Title = "Test API",
-					Version = "v1",
-					Contact = new OpenApiContact
+					c.SwaggerDoc("v1", new OpenApiInfo
 					{
-						Name = "Git Hub",
-						Email = string.Empty,
+						Title = "Test API",
+						Version = "v1",
+						Contact = new OpenApiContact
+						{
+							Name = "Git Hub",
+							Email = string.Empty,
+						}
+					});
+
+					var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+					var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+					if (File.Exists(xmlPath))
+					{
+						c.IncludeXmlComments(xmlPath);
 					}
 				});
-
-				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-				if (File.Exists(xmlPath))
-				{
-					c.IncludeXmlComments(xmlPath);
-				}
-			});
+			}
 
 			services.Configure<GzipCompressionProviderOptions>
 				(options => options.Level = CompressionLevel.Optimal);
@@ -121,17 +126,20 @@ namespace ImageToPuzzle
 			}
 
 			app.UseResponseCompression();
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
+			if (env.IsDevelopment())
 			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test API V1");
-				c.RoutePrefix = string.Empty;
+				app.UseSwagger();
+				app.UseSwaggerUI(c =>
+				{
+					c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test API V1");
+					c.RoutePrefix = string.Empty;
 
-				c.OAuthClientId("swagger-ui");
-				c.OAuthClientSecret("swagger-ui-secret");
-				c.OAuthRealm("swagger-ui-realm");
-				c.OAuthAppName("Swagger UI");
-			});
+					c.OAuthClientId("swagger-ui");
+					c.OAuthClientSecret("swagger-ui-secret");
+					c.OAuthRealm("swagger-ui-realm");
+					c.OAuthAppName("Swagger UI");
+				});
+			}
 
 			if (!env.IsDevelopment())
 			{

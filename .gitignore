@@ -5,3 +5,6 @@
 /logs/back.recimage
 /ImageToPuzzle/wwwroot/image-list/*.*
 /ImageToPuzzle/wwwroot/image-list/**/*.*
+/.idea
+/logs
+/RecImage.sln.DotSettings.user

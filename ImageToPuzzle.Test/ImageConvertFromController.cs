@@ -2,19 +2,17 @@ using ImageToPuzzle.Controllers;
 using ImageConverter.Models;
 using Moq;
 using Microsoft.AspNetCore.Http;
-using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 using ImageToPuzzle.Infrastructure.Logging;
 using System;
 using ImageToPuzzle.Services;
 using ImageToPuzzle.Models;
-using Newtonsoft.Json;
 using ImageToPuzzle.Test.Helpers;
 
 namespace ImageToPuzzle.Test
 {
-	public class ImageConvertFromControll
+	public class ImageConvertFromController
 	{
 		private readonly ImageGenerate _imageGenerate = new ImageGenerate();
 
@@ -30,13 +28,13 @@ namespace ImageToPuzzle.Test
 			var logger = new Mock<IActionLogger>().Object;
 			var imagesService = new Mock<IGetImagesService>().Object;
 
-			var iterations = 10;
-			for (int index = 0; index < iterations; index++)
+			const int iterations = 10;
+			for (var index = 0; index < iterations; index++)
 			{
 				using var imageConverter = new ImageConverter.ImageConverter();
 				var imageToPointConverter = new ImageToPointService(imageConverter, imagesService);
 				var controller = new GenerateController(imageToPointConverter, logger);
-				using var stream = _imageGenerate.GenerateGradientImage();
+				await using var stream = ImageGenerate.GenerateGradientImage();
 				var formFile = new FormFile(stream, 0, stream.Length, "name", "test_image.jpg");
 
 				var result = await controller.ConvertToPoints(formFile, convertOptions);

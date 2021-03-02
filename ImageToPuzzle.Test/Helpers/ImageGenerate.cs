@@ -7,16 +7,16 @@ namespace ImageToPuzzle.Test.Helpers
 {
 	internal class ImageGenerate
 	{
-        public Stream GenerateGradientImage()
+        public static Stream GenerateGradientImage()
         {
             return GenerateGradientImage(500, 500);
         }
 
-        private Stream GenerateGradientImage(int width, int height)
+        private static Stream GenerateGradientImage(int width, int height)
         {
             using var bitmap = new Bitmap(width, height);
             using var graphics = Graphics.FromImage(bitmap);
-            using (LinearGradientBrush brush = new LinearGradientBrush(
+            using (var brush = new LinearGradientBrush(
                 new Rectangle(0, 0, width, height),
                 Color.Blue,
                 Color.Red,

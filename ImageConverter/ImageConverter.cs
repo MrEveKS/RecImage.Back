@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace ImageConverter
 {
-	public class ImageConverter : IImageConverter, IDisposable
+	public sealed class ImageConverter : IImageConverter, IDisposable
 	{
 		private bool _disposedValue;
-
-		public ImageConverter()
-		{
-		}
 
 		/// <summary>
 		/// Convert image to point color object
@@ -24,12 +20,12 @@ namespace ImageConverter
 		public async Task<RecColor> ConvertToChars(Stream imageStream, ConvertOptions options)
 		{
 			var colorStep = (int)options.ColorStep;
-			var pixelSize = 1;
-			var pQ = pixelSize * pixelSize;
+			const int pixelSize = 1;
+			const int pQ = pixelSize * pixelSize;
 
 			var colors = new Dictionary<string, int>();
 
-			var image = ((Bitmap)Bitmap.FromStream(imageStream));
+			var image = ((Bitmap)Image.FromStream(imageStream));
 			var size = CalculateNewSize(image, options.Size);
 			var imageResized = ResizeImage(image, size);
 			if (!options.Colored)
@@ -41,10 +37,10 @@ namespace ImageConverter
 			var width = imageResized.Width - imageResized.Width % pixelSize;
 
 			var colCell = new List<List<int>>(height);
-			for (int indexHeight = 0; indexHeight < height; indexHeight += pixelSize)
+			for (var indexHeight = 0; indexHeight < height; indexHeight += pixelSize)
 			{
 				var row = new List<int>(width);
-				for (int indexWidth = 0; indexWidth < width; indexWidth += pixelSize)
+				for (var indexWidth = 0; indexWidth < width; indexWidth += pixelSize)
 				{
 					var r = 0;
 					var g = 0;
@@ -52,11 +48,11 @@ namespace ImageConverter
 					var rowIndex = indexWidth;
 					var colIndex = indexHeight;
 
-					for (int i = rowIndex; i < rowIndex + pixelSize; i++)
+					for (var i = rowIndex; i < rowIndex + pixelSize; i++)
 					{
-						for (int j = colIndex; j < colIndex + pixelSize; j++)
+						for (var j = colIndex; j < colIndex + pixelSize; j++)
 						{
-							Color pixelColor = imageResized.GetPixel(rowIndex, colIndex);
+							var pixelColor = imageResized.GetPixel(rowIndex, colIndex);
 							r += pixelColor.R;
 							g += pixelColor.G;
 							b += pixelColor.B;
@@ -84,7 +80,6 @@ namespace ImageConverter
 				}
 				colCell.Add(row);
 			}
-			imageResized.Dispose();
 			await imageStream.DisposeAsync();
 			return new RecColor()
 			{
@@ -93,7 +88,7 @@ namespace ImageConverter
 			};
 		}
 
-		private Color GetNewColor(int nR, int nG, int nB, int colorStep)
+		private static Color GetNewColor(int nR, int nG, int nB, int colorStep)
 		{
 			nR = UpdateColor(nR, colorStep);
 			nG = UpdateColor(nG, colorStep);
@@ -102,10 +97,10 @@ namespace ImageConverter
 			return Color.FromArgb(nR, nG, nB);
 		}
 
-		private int UpdateColor(int color, int colorStep)
+		private static int UpdateColor(int color, int colorStep)
 		{
-			var white = 248;
-			var lightWhite = 250;
+			const int white = 248;
+			const int lightWhite = 250;
 
 			if (color > white)
 			{
@@ -119,7 +114,7 @@ namespace ImageConverter
 			return color;
 		}
 
-		private SizeF CalculateNewSize(Bitmap image, double maxWidth)
+		private static SizeF CalculateNewSize(Image image, double maxWidth)
 		{
 			var imageWidth = image.Width;
 			var cof = maxWidth / imageWidth;
@@ -129,72 +124,75 @@ namespace ImageConverter
 			return new SizeF() { Height = newWidth, Width = newHeight };
 		}
 
-		private Bitmap ResizeImage(Bitmap image, SizeF newSize)
+		private static Bitmap ResizeImage(Image image, SizeF newSize)
 		{
-			Bitmap resizedimage;
+			Bitmap resizedImage;
 			var resizeWidth = newSize.Width / (double)image.Width;
 			var resizeHeight = newSize.Height / (double)image.Height;
 
 			if (resizeWidth < resizeHeight)
 			{
 				var newWidth = (int)(resizeWidth * image.Width);
-				var newHeigth = (int)(resizeWidth * image.Height);
-				resizedimage = new Bitmap(image, new Size(newWidth, newHeigth));
+				var newHeight = (int)(resizeWidth * image.Height);
+				resizedImage = new Bitmap(image, new Size(newWidth, newHeight));
 			}
 			else
 			{
 				var newWidth = (int)(resizeHeight * image.Width);
-				var newHeigth = (int)(resizeHeight * image.Height);
-				resizedimage = new Bitmap(image, new Size(newWidth, newHeigth));
+				var newHeight = (int)(resizeHeight * image.Height);
+				resizedImage = new Bitmap(image, new Size(newWidth, newHeight));
 			}
 			image.Dispose();
-			return resizedimage;
+			return resizedImage;
 		}
 
-		private Bitmap Grayscale(Bitmap image)
+		private static Bitmap Grayscale(Image image)
 		{
 			var bitmap = new Bitmap(image);
-			for (int idexWidth = 0; idexWidth < bitmap.Width; idexWidth++)
+			for (var indexWidth = 0; indexWidth < bitmap.Width; indexWidth++)
 			{
-				for (int indexHeight = 0; indexHeight < bitmap.Height; indexHeight++)
+				for (var indexHeight = 0; indexHeight < bitmap.Height; indexHeight++)
 				{
-					int grey = (int)(bitmap.GetPixel(idexWidth, indexHeight).R * 0.3
-						+ bitmap.GetPixel(idexWidth, indexHeight).G * 0.59
-						+ bitmap.GetPixel(idexWidth, indexHeight).B * 0.11);
-					bitmap.SetPixel(idexWidth, indexHeight, Color.FromArgb(grey, grey, grey));
+					var grey = (int)(bitmap.GetPixel(indexWidth, indexHeight).R * 0.3
+					                 + bitmap.GetPixel(indexWidth, indexHeight).G * 0.59
+					                 + bitmap.GetPixel(indexWidth, indexHeight).B * 0.11);
+					bitmap.SetPixel(indexWidth, indexHeight, Color.FromArgb(grey, grey, grey));
 				}
 			}
 			image.Dispose();
 			return bitmap;
 		}
 
-		private Dictionary<int, string> ToCellsColor(Dictionary<string, int> colors)
+		private static Dictionary<int, string> ToCellsColor(Dictionary<string, int> colors)
 		{
 			var result = new Dictionary<int, string>(colors.Count);
-			foreach (var color in colors)
+			foreach (var (key, value) in colors)
 			{
-				result.Add(color.Value, color.Key);
+				result.Add(value, key);
 			}
 			return result;
 		}
 
-		protected virtual void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
-			if (!_disposedValue)
+			if (_disposedValue) return;
+			if (disposing)
 			{
-				if (disposing)
-				{
-					GC.Collect(GC.MaxGeneration);
-				}
-
-				_disposedValue = true;
+				GC.Collect(GC.MaxGeneration);
 			}
+
+			_disposedValue = true;
 		}
 
 		void IDisposable.Dispose()
 		{
 			Dispose(disposing: true);
 			GC.SuppressFinalize(this);
+		}
+		
+		~ImageConverter()
+		{
+			Dispose (false);
 		}
 	}
 }

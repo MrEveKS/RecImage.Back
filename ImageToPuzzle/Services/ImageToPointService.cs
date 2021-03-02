@@ -22,7 +22,7 @@ namespace ImageToPuzzle.Services
 
 		public async Task<RecColor> ConvertFromFile(IFormFile image, ConvertOptions options)
 		{
-			using var memoryStream = new MemoryStream();
+			await using var memoryStream = new MemoryStream();
 			await image.CopyToAsync(memoryStream)
 				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
 			var result = await _imageConverter.ConvertToChars(memoryStream, options)
@@ -33,9 +33,14 @@ namespace ImageToPuzzle.Services
 		public async Task<RecColor> ConvertFromFileName(ConvertFromNameOptions options)
 		{
 			var images = _imagesService.GetList();
-			var fileName = images.FirstOrDefault(x => x.Id == options.ImageId).Name;
+			var fileName = images.FirstOrDefault(x => x.Id == options.ImageId)?.Name;
 
-			using var stream = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
+			if (string.IsNullOrEmpty(fileName))
+			{
+				return null;
+			}
+
+			await using var stream = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
 				FolderConstant.ImagePath, fileName));
 			var result = await _imageConverter.ConvertToChars(stream, options)
 				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);

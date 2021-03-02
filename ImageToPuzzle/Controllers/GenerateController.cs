@@ -35,7 +35,7 @@ namespace ImageToPuzzle.Controllers
 			try
 			{
 				_logger.InformationObject(options);
-				Stopwatch stopwatch = Stopwatch.StartNew();
+				var stopwatch = Stopwatch.StartNew();
 				var result = await _imageConverter.ConvertFromFile(image, options);
 				_logger.Information("ConvertToPoints time", stopwatch.Elapsed.TotalMilliseconds);
 				return new JsonResult(result);
@@ -53,7 +53,7 @@ namespace ImageToPuzzle.Controllers
 			try
 			{
 				_logger.InformationObject(options);
-				Stopwatch stopwatch = Stopwatch.StartNew();
+				var stopwatch = Stopwatch.StartNew();
 				var result = await _imageConverter.ConvertFromFileName(options);
 				_logger.Information("ConvertToPointsByFileName time", stopwatch.Elapsed.TotalMilliseconds);
 				return new JsonResult(result);

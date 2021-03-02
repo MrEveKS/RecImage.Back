@@ -37,20 +37,18 @@ namespace ImageToPuzzle.Common.Extensions
 			var sb = new StringBuilder();
 			sb.AppendLine($"{GetEmoji(logEvent)} {logEvent.RenderMessage()}");
 
-			if (logEvent.Exception != null)
+			if (logEvent.Exception == null) return new TelegramMessage(sb.ToString(), TelegramParseModeTypes.Html);
+			var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Unidentified ENV";
+
+			sb.AppendLine($"<strong>Message</strong>: <i>{logEvent.Exception.Message}</i>");
+			sb.AppendLine($"<strong>ENV</strong>: <code>{envName}</code>\n");
+
+			sb.AppendLine($"<strong>Type</strong>: <code>{logEvent.Exception.GetType().Name}</code>\n");
+			sb.AppendLine($"<strong>Stack Trace</strong>\n<pre>{logEvent.Exception}</pre>");
+
+			if (tgConfig.ResponsibleDeveloperLogins != null && tgConfig.ResponsibleDeveloperLogins.Any())
 			{
-				var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Unidentified ENV";
-
-				sb.AppendLine($"<strong>Message</strong>: <i>{logEvent.Exception.Message}</i>");
-				sb.AppendLine($"<strong>ENV</strong>: <code>{envName}</code>\n");
-
-				sb.AppendLine($"<strong>Type</strong>: <code>{logEvent.Exception.GetType().Name}</code>\n");
-				sb.AppendLine($"<strong>Stack Trace</strong>\n<pre>{logEvent.Exception}</pre>");
-
-				if (tgConfig.ResponsibleDeveloperLogins != null && tgConfig.ResponsibleDeveloperLogins.Any())
-				{
-					sb.AppendLine("\n" + string.Join(" ", tgConfig.ResponsibleDeveloperLogins.Select(x => $"@{x}")));
-				}
+				sb.AppendLine("\n" + string.Join(" ", tgConfig.ResponsibleDeveloperLogins.Select(x => $"@{x}")));
 			}
 
 			return new TelegramMessage(sb.ToString(), TelegramParseModeTypes.Html);
@@ -58,30 +56,16 @@ namespace ImageToPuzzle.Common.Extensions
 
 		private static string GetEmoji(LogEvent log)
 		{
-			switch (log.Level)
+			return log.Level switch
 			{
-				case LogEventLevel.Debug:
-
-					return "👉";
-				case LogEventLevel.Error:
-
-					return "❗";
-				case LogEventLevel.Fatal:
-
-					return "‼";
-				case LogEventLevel.Information:
-
-					return "ℹ";
-				case LogEventLevel.Verbose:
-
-					return "⚡";
-				case LogEventLevel.Warning:
-
-					return "⚠";
-				default:
-
-					return "";
-			}
+				LogEventLevel.Debug => "👉",
+				LogEventLevel.Error => "❗",
+				LogEventLevel.Fatal => "‼",
+				LogEventLevel.Information => "ℹ",
+				LogEventLevel.Verbose => "⚡",
+				LogEventLevel.Warning => "⚠",
+				_ => ""
+			};
 		}
 	}
 }

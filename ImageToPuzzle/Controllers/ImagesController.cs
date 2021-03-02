@@ -24,7 +24,7 @@ namespace ImageToPuzzle.Controllers
 		{
 			try
 			{
-				Stopwatch stopwatch = Stopwatch.StartNew();
+				var stopwatch = Stopwatch.StartNew();
 				var result = _imagesService.GetList();
 				_logger.Information("GetAll time", stopwatch.Elapsed.TotalSeconds);
 				return new JsonResult(result);
@@ -41,7 +41,7 @@ namespace ImageToPuzzle.Controllers
 		{
 			try
 			{
-				Stopwatch stopwatch = Stopwatch.StartNew();
+				var stopwatch = Stopwatch.StartNew();
 				var result = _imagesService.GetRandomId();
 				_logger.Information("GetRandomId time", stopwatch.Elapsed.TotalSeconds);
 				return new JsonResult(result);

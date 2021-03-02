@@ -18,7 +18,7 @@ namespace ImageToPuzzle.Test
 			var files = imagesConstroller.GetAll();
 
 			Assert.NotNull(files);
-			Assert.True(files.Value.ToString().Length > 0);
+			Assert.True(files.Value.ToString()?.Length > 0);
 		}
 	}
 }

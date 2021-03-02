@@ -28,7 +28,7 @@ namespace ImageToPuzzle.Services
 			var random = new Random();
 			var directoryInfo = new DirectoryInfo(
 				Path.Combine(Directory.GetCurrentDirectory(), FolderConstant.ImageMinPath));
-			var filesCount = directoryInfo.GetFiles().Count();
+			var filesCount = directoryInfo.GetFiles().Length;
 			return random.Next(0, filesCount) + 1;
 		}
 	}

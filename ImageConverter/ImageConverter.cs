@@ -26,25 +26,63 @@ namespace ImageConverter
 		/// <returns> </returns>
 		public async Task<RecColor> ConvertToChars(Stream imageStream, ConvertOptions options)
 		{
+			var image = await ImageStreamConvert(imageStream, options);
+
+			return ImageConvert(image, options);
+		}
+
+		private async Task<Bitmap> ImageStreamConvert(Stream imageStream, ConvertOptions options)
+		{
+			Bitmap image256;
+
+			var image = (Bitmap) Image.FromStream(imageStream);
+			var size = CalculateNewSize(image, options.Size);
+
+			switch (options.ColorStep)
+			{
+				case ColorStep.Middle:
+				case ColorStep.Big:
+				case ColorStep.VeryBig:
+				{
+					image256 = ResizeImage(ConvertTo256(image), size);
+
+					if (!options.Colored)
+					{
+						image256 = GrayScale(image256);
+					}
+				}
+
+					break;
+				default:
+				{
+					var imageResized = ResizeImage(image, size);
+
+					if (!options.Colored)
+					{
+						imageResized = GrayScale(imageResized);
+					}
+
+					image256 = ConvertTo256(imageResized);
+				}
+
+					break;
+			}
+
+			await imageStream.DisposeAsync();
+
+			return image256;
+		}
+
+		private RecColor ImageConvert(Bitmap image, ConvertOptions options)
+		{
 			var colorStep = (int) options.ColorStep;
 			const int pixelSize = 1;
 			const int pQ = pixelSize * pixelSize;
 
 			var colors = new Dictionary<string, int>();
 
-			var image = (Bitmap) Image.FromStream(imageStream);
-			var size = CalculateNewSize(image, options.Size);
-			var imageResized = ResizeImage(image, size);
-
-			if (!options.Colored)
-			{
-				imageResized = GrayScale(imageResized);
-			}
-
-			var image256 = ConvertTo256(imageResized);
-
-			var height = image256.Height - image256.Height % pixelSize;
-			var width = image256.Width - image256.Width % pixelSize;
+			var height = image.Height - image.Height % pixelSize;
+			var width = image.Width - image.Width % pixelSize;
 
 			var colCell = new List<List<int>>(height);
 
@@ -64,7 +102,7 @@ namespace ImageConverter
 					{
 						for (var j = colIndex; j < colIndex + pixelSize; j++)
 						{
-							var pixelColor = image256.GetPixel(rowIndex, colIndex);
+							var pixelColor = image.GetPixel(rowIndex, colIndex);
 							r += pixelColor.R;
 							g += pixelColor.G;
 							b += pixelColor.B;
@@ -93,8 +131,6 @@ namespace ImageConverter
 
 				colCell.Add(row);
 			}
-
-			await imageStream.DisposeAsync();
 
 			return new RecColor
 			{

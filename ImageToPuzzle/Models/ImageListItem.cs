@@ -1,8 +1,8 @@
-﻿namespace ImageToPuzzle.Models
+﻿namespace ImageToPuzzle.Models;
+
+public sealed class ImageListItem
 {
-	public class ImageListItem
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-	}
+	public int Id { get; set; }
+
+	public string Name { get; set; }
 }

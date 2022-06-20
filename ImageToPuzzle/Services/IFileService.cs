@@ -1,9 +1,8 @@
 ﻿using System.IO;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Services;
+
+public interface IFileService
 {
-    public interface IFileService
-    {
-        Stream OpenRead(string fullFileName);
-    }
+	Stream OpenRead(string fullFileName);
 }

@@ -1,60 +1,59 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageConverter;
-using ImageConverter.Models;
+using ImageService.Models;
+using ImageService.Services;
 using ImageToPuzzle.Common.Constants;
 using ImageToPuzzle.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Services;
+
+internal sealed class ImageToPointService : IImageToPointService
 {
-	public class ImageToPointService : IImageToPointService
+	private readonly IFileService _fileService;
+
+	private readonly IImageConverter _imageConverter;
+
+	private readonly IGetImagesService _imagesService;
+
+	public ImageToPointService(IImageConverter imageConverter, IGetImagesService imagesService, IFileService fileService)
 	{
-		private readonly IFileService _fileService;
+		_imageConverter = imageConverter;
+		_imagesService = imagesService;
+		_fileService = fileService;
+	}
 
-		private readonly IImageConverter _imageConverter;
+	public async Task<ColorPoints> ConvertFromFile(IFormFile image, ConvertOptions options)
+	{
+		await using var memoryStream = new MemoryStream();
 
-		private readonly IGetImagesService _imagesService;
+		await image.CopyToAsync(memoryStream)
+			.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
 
-		public ImageToPointService(IImageConverter imageConverter, IGetImagesService imagesService, IFileService fileService)
+		var result = await _imageConverter.ConvertToColorPoints(memoryStream, options)
+			.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
+
+		return result;
+	}
+
+	public async Task<ColorPoints> ConvertFromFileName(ConvertFromNameOptions options)
+	{
+		var images = _imagesService.GetList();
+		var fileName = images.FirstOrDefault(x => x.Id == options.ImageId)?.Name;
+
+		if (string.IsNullOrEmpty(fileName))
 		{
-			_imageConverter = imageConverter;
-			_imagesService = imagesService;
-			_fileService = fileService;
+			return null;
 		}
 
-		public async Task<RecColor> ConvertFromFile(IFormFile image, ConvertOptions options)
-		{
-			await using var memoryStream = new MemoryStream();
+		await using var stream = _fileService.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
+			FolderConstant.ImagePath,
+			fileName));
 
-			await image.CopyToAsync(memoryStream)
-				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
+		var result = await _imageConverter.ConvertToColorPoints(stream, options)
+			.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
 
-			var result = await _imageConverter.ConvertToChars(memoryStream, options)
-				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
-
-			return result;
-		}
-
-		public async Task<RecColor> ConvertFromFileName(ConvertFromNameOptions options)
-		{
-			var images = _imagesService.GetList();
-			var fileName = images.FirstOrDefault(x => x.Id == options.ImageId)?.Name;
-
-			if (string.IsNullOrEmpty(fileName))
-			{
-				return null;
-			}
-
-			await using var stream = _fileService.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
-				FolderConstant.ImagePath,
-				fileName));
-
-			var result = await _imageConverter.ConvertToChars(stream, options)
-				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
-
-			return result;
-		}
+		return result;
 	}
 }

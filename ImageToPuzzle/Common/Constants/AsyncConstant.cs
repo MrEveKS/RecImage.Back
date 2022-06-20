@@ -1,7 +1,6 @@
-﻿namespace ImageToPuzzle.Common.Constants
+﻿namespace ImageToPuzzle.Common.Constants;
+
+internal static class AsyncConstant
 {
-	public static class AsyncConstant
-	{
-		public const bool ContinueOnCapturedContext = false;
-	}
+	public const bool ContinueOnCapturedContext = false;
 }

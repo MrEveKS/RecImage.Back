@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageToPuzzle", "ImageToPuzzle\ImageToPuzzle.csproj", "{E6ED2CBB-62A1-4423-8BD4-D66AF600DC32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageConverter", "ImageConverter\ImageConverter.csproj", "{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageService", "ImageService\ImageService.csproj", "{6E8051EF-03C6-4DE7-9EF4-78D59F41E784}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageToPuzzle.Test", "ImageToPuzzle.Test\ImageToPuzzle.Test.csproj", "{4ACB91EE-0D62-45AD-BCED-070A3453913C}"
 EndProject

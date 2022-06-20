@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.ResponseCompression;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
+using Microsoft.AspNetCore.ResponseCompression;
 
-namespace ImageToPuzzle.Infrastructure.Providers
+namespace ImageToPuzzle.Infrastructure.Providers;
+
+internal sealed class DeflateCompressionProvider : ICompressionProvider
 {
-	internal sealed class DeflateCompressionProvider : ICompressionProvider
-	{
-		public string EncodingName => "deflate";
-		public bool SupportsFlush => true;
+	public string EncodingName => "deflate";
 
-		public Stream CreateStream(Stream outputStream)
-		{
-			return new DeflateStream(outputStream, CompressionLevel.Optimal);
-		}
+	public bool SupportsFlush => true;
+
+	public Stream CreateStream(Stream outputStream)
+	{
+		return new DeflateStream(outputStream, CompressionLevel.Optimal);
 	}
 }

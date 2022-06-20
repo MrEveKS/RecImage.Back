@@ -1,9 +1,8 @@
-﻿using ImageConverter.Models;
+﻿using ImageService.Models;
 
-namespace ImageToPuzzle.Models
+namespace ImageToPuzzle.Models;
+
+public sealed class ConvertFromNameOptions : ConvertOptions
 {
-	public class ConvertFromNameOptions : ConvertOptions
-	{
-		public int ImageId { get; set; }
-	}
+	public int ImageId { get; set; }
 }

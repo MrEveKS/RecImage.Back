@@ -1,13 +1,12 @@
 using System.IO;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Services;
+
+internal sealed class DirectoryService : IDirectoryService
 {
-	public class DirectoryService : IDirectoryService
+	public FileInfo[] GetFiles(string fullPath)
 	{
-		public FileInfo[] GetFiles(string fullPath)
-		{
-			return new DirectoryInfo(fullPath)
-				.GetFiles();
-		}
+		return new DirectoryInfo(fullPath)
+			.GetFiles();
 	}
 }

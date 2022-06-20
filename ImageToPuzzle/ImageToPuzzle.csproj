@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <TargetFramework>netcoreapp6.0</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <UserSecretsId>9c4c99e2-8eb8-4a49-a0f6-001aba41a525</UserSecretsId>
   </PropertyGroup>
@@ -33,11 +33,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageConverter\ImageConverter.csproj" />
+    <ProjectReference Include="..\ImageService\ImageService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\image-list\min\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Files\AD59A9C36DF4B7263B0C8C331B08AABF.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">

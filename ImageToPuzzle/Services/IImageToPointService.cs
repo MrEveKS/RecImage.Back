@@ -1,13 +1,13 @@
-﻿using ImageConverter.Models;
+﻿using System.Threading.Tasks;
+using ImageService.Models;
 using ImageToPuzzle.Models;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Services;
+
+public interface IImageToPointService
 {
-	public interface IImageToPointService
-	{
-		Task<RecColor> ConvertFromFileName(ConvertFromNameOptions options);
-		Task<RecColor> ConvertFromFile(IFormFile image, ConvertOptions options);
-	}
+	Task<ColorPoints> ConvertFromFileName(ConvertFromNameOptions options);
+
+	Task<ColorPoints> ConvertFromFile(IFormFile image, ConvertOptions options);
 }

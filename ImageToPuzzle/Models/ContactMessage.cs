@@ -1,9 +1,10 @@
-﻿namespace ImageToPuzzle.Models
+﻿namespace ImageToPuzzle.Models;
+
+public sealed class ContactMessage
 {
-	public class ContactMessage
-	{
-		public string UserName { get; set; }
-		public string UserEmail { get; set; }
-		public string UserMessage { get; set; }
-	}
+	public string UserName { get; set; }
+
+	public string UserEmail { get; set; }
+
+	public string UserMessage { get; set; }
 }

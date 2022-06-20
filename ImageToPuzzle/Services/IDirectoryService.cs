@@ -1,9 +1,8 @@
 ﻿using System.IO;
 
-namespace ImageToPuzzle.Services
+namespace ImageToPuzzle.Services;
+
+public interface IDirectoryService
 {
-	public interface IDirectoryService
-	{
-		FileInfo[] GetFiles(string fullPath);
-	}
+	FileInfo[] GetFiles(string fullPath);
 }

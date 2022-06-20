@@ -1,34 +1,33 @@
-﻿using ImageToPuzzle.Infrastructure.Logging;
+﻿using System;
+using ImageToPuzzle.Infrastructure.Logging;
 using ImageToPuzzle.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
-namespace ImageToPuzzle.Controllers
+namespace ImageToPuzzle.Controllers;
+
+[Route("api/[controller]/[action]")]
+[Produces("application/json")]
+public class ContactController : Controller
 {
-	[Route("api/[controller]/[action]")]
-	[Produces("application/json")]
-	public class ContactController : Controller
+	private readonly IActionLogger _logger;
+
+	public ContactController(IActionLogger logger)
 	{
-		private readonly IActionLogger _logger;
+		_logger = logger;
+	}
 
-		public ContactController(IActionLogger logger)
+	[HttpPost]
+	public void Post([FromBody] ContactMessage message)
+	{
+		try
 		{
-			_logger = logger;
+			_logger.FatalObjectMessage(nameof(Post), message);
 		}
-
-		[HttpPost]
-		public void Post([FromBody] ContactMessage message)
+		catch (Exception ex)
 		{
-			try
-			{
-				_logger.FatalObjectMessage(nameof(ContactController.Post), message);
-			}
-			catch (Exception ex)
-			{
-				_logger.ErrorObject(ex, message);
-				throw;
-			}
+			_logger.ErrorObject(ex, message);
 
+			throw;
 		}
 	}
 }

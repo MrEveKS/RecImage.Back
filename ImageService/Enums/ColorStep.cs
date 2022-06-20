@@ -2,13 +2,9 @@
 
 public enum ColorStep
 {
-	VeryBig = 6,
-
-	Big = 12,
-
-	Middle = 18,
-
-	Small = 24,
-
-	VerySmall = 30
+	VeryBig = 1,
+	Big = 6,
+	Middle = 12,
+	Small = 18,
+	VerySmall = 24
 }

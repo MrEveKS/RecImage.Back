@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
+using ImageService.Enums;
 using ImageService.Models;
 
 namespace ImageService.Services;
@@ -20,41 +22,57 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
 	public async Task<ColorPoints> ConvertToColorPoints(Stream imageStream,
 														ConvertOptions options)
 	{
+		var image = await ImageStreamConvert(imageStream, options);
+		return ImageConvert(image, options);
+	}
+
+	private async Task<Bitmap> ImageStreamConvert(Stream imageStream, ConvertOptions options)
+	{
+
+		var image = (Bitmap) Image.FromStream(imageStream);
+		var size = CalculateNewSize(image, options.Size);
+
+		var image256 = options.ColorStep switch
+		{
+			ColorStep.Middle or ColorStep.Big or ColorStep.VeryBig when options.Colored => ResizeImage(ConvertTo256(image), size),
+			ColorStep.Middle or ColorStep.Big or ColorStep.VeryBig when !options.Colored => GrayScale(
+				ResizeImage(ConvertTo256(image), size)),
+			ColorStep.Small or ColorStep.VerySmall or _ when options.Colored => ConvertTo256(ResizeImage(image, size)),
+			ColorStep.Small or ColorStep.VerySmall or _ when !options.Colored => ConvertTo256(GrayScale(ResizeImage(image, size))),
+		};
+
+		await imageStream.DisposeAsync();
+		return image256;
+	}
+
+	private static ColorPoints ImageConvert(Bitmap image, ConvertOptions options)
+	{
 		var colorStep = (int) options.ColorStep;
 		const int pixelSize = 1;
 		const int separatePointSize = pixelSize * pixelSize;
 
 		var colors = new Dictionary<string, int>();
 
-		var image = (Bitmap) Image.FromStream(imageStream);
-		var size = CalculateNewSize(image, options.Size);
-		var imageResized = ResizeImage(image, size);
-
-		if (!options.Colored)
-		{
-			imageResized = GrayScale(imageResized);
-		}
-
-		var heightWithSeparate = imageResized.Height - imageResized.Height % pixelSize;
-		var widthHeightWithSeparate = imageResized.Width - imageResized.Width % pixelSize;
+		var heightWithSeparate = image.Height - image.Height % pixelSize;
+		var widthWithSeparate = image.Width - image.Width % pixelSize;
 
 		var cells = new List<List<int>>(heightWithSeparate);
 
 		for (var colIndex = 0; colIndex < heightWithSeparate; colIndex += pixelSize)
 		{
-			var row = new List<int>(widthHeightWithSeparate);
+			var row = new List<int>(widthWithSeparate);
 
-			for (var rowIndex = 0; rowIndex < widthHeightWithSeparate; rowIndex += pixelSize)
+			for (var rowIndex = 0; rowIndex < widthWithSeparate; rowIndex += pixelSize)
 			{
 				var red = 0;
 				var green = 0;
 				var blue = 0;
 
-				for (var rIndex = rowIndex; rIndex < rowIndex + pixelSize; rIndex++)
+				for (var i = rowIndex; i < rowIndex + pixelSize; i++)
 				{
-					for (var cIndex = colIndex; cIndex < colIndex + pixelSize; cIndex++)
+					for (var j = colIndex; j < colIndex + pixelSize; j++)
 					{
-						var pixelColor = imageResized.GetPixel(rowIndex, colIndex);
+						var pixelColor = image.GetPixel(rowIndex, colIndex);
 						red += pixelColor.R;
 						green += pixelColor.G;
 						blue += pixelColor.B;
@@ -84,13 +102,21 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
 			cells.Add(row);
 		}
 
-		await imageStream.DisposeAsync();
-
 		return new ColorPoints
 		{
 			Cells = cells,
 			CellsColor = ToCellsColor(colors)
 		};
+	}
+
+	private static Bitmap ConvertTo256(Bitmap image)
+	{
+		var result = image.Clone(
+			new Rectangle(0, 0, image.Width, image.Height),
+			PixelFormat.Format8bppIndexed);
+
+		image.Dispose();
+		return result;
 	}
 
 	private void Dispose(bool disposing)

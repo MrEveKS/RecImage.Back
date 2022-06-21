@@ -21,6 +21,7 @@ public class ImagesController : Controller
 	}
 
 	[HttpPost]
+	[ResponseCache(Location = ResponseCacheLocation.Client, Duration = 24 * 60 * 60)]
 	public JsonResult GetAll()
 	{
 		try
@@ -34,7 +35,6 @@ public class ImagesController : Controller
 		catch (Exception ex)
 		{
 			_logger.Error(ex, nameof(GetAll));
-
 			throw;
 		}
 	}
@@ -53,7 +53,6 @@ public class ImagesController : Controller
 		catch (Exception ex)
 		{
 			_logger.Error(ex, nameof(GetRandomId));
-
 			throw;
 		}
 	}

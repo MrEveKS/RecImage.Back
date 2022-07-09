@@ -10,9 +10,9 @@ using Serilog.Sinks.Telegram.Client;
 
 namespace ImageToPuzzle.Common.Extensions;
 
-internal static class LoggingHelper
+internal static class LoggingHelperExtensions
 {
-	public static LoggerConfiguration SetTelegramLogger(this LoggerConfiguration сonfiguration,
+	public static LoggerConfiguration SetTelegramLogger(this LoggerConfiguration configuration,
 														IConfiguration configurationProvider)
 	{
 		var config = configurationProvider
@@ -21,10 +21,10 @@ internal static class LoggingHelper
 
 		if (config?.BotId == null || config.ChatId == null)
 		{
-			return сonfiguration;
+			return configuration;
 		}
 
-		return сonfiguration
+		return configuration
 			.WriteTo.Async(a =>
 					a.Telegram(config.BotId,
 						config.ChatId,

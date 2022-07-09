@@ -102,7 +102,8 @@ public class Startup
 					"text/json",
 					"text/plain",
 					"text/xml",
-					"image/png"
+					"image/png",
+					"image/webp"
 				});
 		});
 
@@ -155,7 +156,7 @@ public class Startup
 			app.UseHttpsRedirection();
 		}
 
-		app.UseStaticFiles();
+		AddStaticFilesWithCash(app);
 		app.UseSerilogRequestLogging();
 
 		app.UseRouting();
@@ -191,6 +192,19 @@ public class Startup
 			await context.HttpContext.Response
 				.WriteAsync(response)
 				.ConfigureAwait(AsyncConstant.ContinueOnCapturedContext);
+		});
+	}
+
+	private void AddStaticFilesWithCash(IApplicationBuilder app)
+	{
+		var cacheMaxAgeOneWeek = (60 * 60 * 24 * 7).ToString();
+
+		app.UseStaticFiles(new StaticFileOptions
+		{
+			OnPrepareResponse = ctx =>
+			{
+				ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cacheMaxAgeOneWeek}");
+			}
 		});
 	}
 }

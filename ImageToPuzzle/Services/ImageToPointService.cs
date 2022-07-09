@@ -40,7 +40,7 @@ internal sealed class ImageToPointService : IImageToPointService
 	public async Task<ColorPoints> ConvertFromFileName(ConvertFromNameOptions options)
 	{
 		var images = _imagesService.GetList();
-		var fileName = images.FirstOrDefault(x => x.Id == options.ImageId)?.Name;
+		var fileName = images.FirstOrDefault(x => x.Id == options.ImageId)?.OriginalName;
 
 		if (string.IsNullOrEmpty(fileName))
 		{

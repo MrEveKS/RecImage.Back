@@ -34,6 +34,7 @@ public class ImagesController : Controller
 		catch (Exception ex)
 		{
 			_logger.Error(ex, nameof(GetAll));
+
 			throw;
 		}
 	}
@@ -52,6 +53,7 @@ public class ImagesController : Controller
 		catch (Exception ex)
 		{
 			_logger.Error(ex, nameof(GetRandomId));
+
 			throw;
 		}
 	}

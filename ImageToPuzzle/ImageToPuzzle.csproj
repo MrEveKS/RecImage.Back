@@ -1,56 +1,56 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
-    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-    <UserSecretsId>9c4c99e2-8eb8-4a49-a0f6-001aba41a525</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp6.0</TargetFramework>
+		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+		<UserSecretsId>9c4c99e2-8eb8-4a49-a0f6-001aba41a525</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="logs\**" />
-    <Content Remove="logs\**" />
-    <EmbeddedResource Remove="logs\**" />
-    <None Remove="logs\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="logs\**"/>
+		<Content Remove="logs\**"/>
+		<EmbeddedResource Remove="logs\**"/>
+		<None Remove="logs\**"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Serilog" Version="2.11.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
-    <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
-    <PackageReference Include="Serilog.Sinks.TelegramLog" Version="2.1.0" />
-    <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+		<PackageReference Include="Serilog" Version="2.11.0"/>
+		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0"/>
+		<PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0"/>
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0"/>
+		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0"/>
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1"/>
+		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0"/>
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1"/>
+		<PackageReference Include="Serilog.Sinks.TelegramLog" Version="2.1.0"/>
+		<PackageReference Include="SerilogAnalyzer" Version="0.15.0"/>
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1"/>
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1"/>
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.1"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ImageService\ImageService.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ImageService\ImageService.csproj"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\image-list\min\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\image-list\min\"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\Files\AD59A9C36DF4B7263B0C8C331B08AABF.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="wwwroot\Files\AD59A9C36DF4B7263B0C8C331B08AABF.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
-    <EnvironmentName>Development</EnvironmentName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
-    <EnvironmentName>Production</EnvironmentName>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+		<EnvironmentName>Development</EnvironmentName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
+		<EnvironmentName>Production</EnvironmentName>
+	</PropertyGroup>
 
 </Project>

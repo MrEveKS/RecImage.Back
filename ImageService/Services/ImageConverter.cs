@@ -23,12 +23,12 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
 														ConvertOptions options)
 	{
 		var image = await ImageStreamConvert(imageStream, options);
+
 		return ImageConvert(image, options);
 	}
 
 	private async Task<Bitmap> ImageStreamConvert(Stream imageStream, ConvertOptions options)
 	{
-
 		var image = (Bitmap) Image.FromStream(imageStream);
 		var size = CalculateNewSize(image, options.Size);
 
@@ -38,10 +38,11 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
 			ColorStep.Middle or ColorStep.Big or ColorStep.VeryBig when !options.Colored => GrayScale(
 				ResizeImage(ConvertTo256(image), size)),
 			ColorStep.Small or ColorStep.VerySmall or _ when options.Colored => ConvertTo256(ResizeImage(image, size)),
-			ColorStep.Small or ColorStep.VerySmall or _ when !options.Colored => ConvertTo256(GrayScale(ResizeImage(image, size))),
+			ColorStep.Small or ColorStep.VerySmall or _ when !options.Colored => ConvertTo256(GrayScale(ResizeImage(image, size)))
 		};
 
 		await imageStream.DisposeAsync();
+
 		return image256;
 	}
 
@@ -111,11 +112,11 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
 
 	private static Bitmap ConvertTo256(Bitmap image)
 	{
-		var result = image.Clone(
-			new Rectangle(0, 0, image.Width, image.Height),
+		var result = image.Clone(new Rectangle(0, 0, image.Width, image.Height),
 			PixelFormat.Format8bppIndexed);
 
 		image.Dispose();
+
 		return result;
 	}
 

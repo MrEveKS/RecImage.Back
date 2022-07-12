@@ -1,10 +1,7 @@
 /.vs
 /**/bin
 /**/obj
-/ImageToPuzzle/logs
-/logs/back.recimage
-/ImageToPuzzle/wwwroot/image-list/*.*
-/ImageToPuzzle/wwwroot/image-list/**/*.*
 /.idea
-/logs
-/RecImage.sln.DotSettings.user
+/RecImage.Api.sln.DotSettings.user
+Logs
+image-list

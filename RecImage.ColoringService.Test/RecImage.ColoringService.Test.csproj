@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp6.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
+        <PackageReference Include="Moq" Version="4.16.1"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.1"/>
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.1"/>
+        <PackageReference Include="coverlet.collector" Version="3.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RecImage.ColoringService\RecImage.ColoringService.csproj"/>
+        <ProjectReference Include="..\RecImage.ImageToPuzzle\RecImage.ImageToPuzzle.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="wwwroot\image-list\min\test_image.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="wwwroot\image-list\test_image.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

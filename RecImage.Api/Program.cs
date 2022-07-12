@@ -18,7 +18,6 @@ public class Program
     public static int Main(string[] args)
     {
         Log.Logger = Bootstrapper.GetSerilogLogger(Configuration);
-        ;
 
         try
         {

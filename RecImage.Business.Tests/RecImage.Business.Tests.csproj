@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp6.0</TargetFramework>
@@ -23,18 +23,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RecImage.ColoringService\RecImage.ColoringService.csproj" />
-        <ProjectReference Include="..\RecImage.Infrastructure.Logger\RecImage.Infrastructure.Logger.csproj" />
+        <ProjectReference Include="..\RecImage.Business\RecImage.Business.csproj" />
         <ProjectReference Include="..\RecImage.Test.Commons\RecImage.Test.Commons.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="wwwroot\image-list\min\test_image.jpg">
+        <Content Include="appsettings.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="wwwroot\image-list\test_image.jpg">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecImage.Infrastructure.Log
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecImage.Infrastructure.Commons", "RecImage.Infrastructure.Commons\RecImage.Infrastructure.Commons.csproj", "{0AB0D503-6608-4FB6-BA69-1024CF3FA699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecImage.Business.Tests", "RecImage.Business.Tests\RecImage.Business.Tests.csproj", "{579BC18C-A3B7-41A3-8F64-B30C10F95E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecImage.Test.Commons", "RecImage.Test.Commons\RecImage.Test.Commons.csproj", "{8DD122C8-5B81-4D75-970B-94E455909016}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,14 @@ Global
 		{0AB0D503-6608-4FB6-BA69-1024CF3FA699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AB0D503-6608-4FB6-BA69-1024CF3FA699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AB0D503-6608-4FB6-BA69-1024CF3FA699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{579BC18C-A3B7-41A3-8F64-B30C10F95E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{579BC18C-A3B7-41A3-8F64-B30C10F95E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{579BC18C-A3B7-41A3-8F64-B30C10F95E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{579BC18C-A3B7-41A3-8F64-B30C10F95E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD122C8-5B81-4D75-970B-94E455909016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD122C8-5B81-4D75-970B-94E455909016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD122C8-5B81-4D75-970B-94E455909016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD122C8-5B81-4D75-970B-94E455909016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +79,7 @@ Global
 		{6E8051EF-03C6-4DE7-9EF4-78D59F41E784} = {63DBBAC9-DEBF-4AA3-8857-9C3436108C8B}
 		{76F4C4E0-72D6-45BC-A918-A38C971821F0} = {63DBBAC9-DEBF-4AA3-8857-9C3436108C8B}
 		{0AB0D503-6608-4FB6-BA69-1024CF3FA699} = {63DBBAC9-DEBF-4AA3-8857-9C3436108C8B}
+		{579BC18C-A3B7-41A3-8F64-B30C10F95E14} = {A76FC9A4-6E90-4231-8071-5F76109577C8}
+		{8DD122C8-5B81-4D75-970B-94E455909016} = {A76FC9A4-6E90-4231-8071-5F76109577C8}
 	EndGlobalSection
 EndGlobal

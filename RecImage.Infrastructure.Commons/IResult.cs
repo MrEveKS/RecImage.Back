@@ -7,7 +7,7 @@ public interface IResult
     int StatusCode { get; set; }
 }
 
-public interface IResult<T> : IResult
+public interface IResult<TResult> : IResult
 {
-    public T? Data { get; set; }
+    public TResult? Data { get; set; }
 }

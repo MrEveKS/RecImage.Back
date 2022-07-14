@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RecImage.Business.Features.ContactMessage;
+using IResult = RecImage.Infrastructure.Commons.IResult;
 
 namespace RecImage.Api.Controllers;
 
@@ -16,9 +17,9 @@ public class ContactController : Controller
     }
 
     [HttpPost]
-    public async Task Post([FromBody] ContactMessageCommand message,
+    public async Task<IResult> Post([FromBody] ContactMessageQuery message,
         CancellationToken cancellationToken = default)
     {
-        await _mediator.Publish(message, cancellationToken);
+        return await _mediator.Send(message, cancellationToken);
     }
 }

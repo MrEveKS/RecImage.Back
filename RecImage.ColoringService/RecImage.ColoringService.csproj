@@ -18,8 +18,4 @@
         <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\RecImage.ColoringService.Commons\RecImage.ColoringService.Commons.csproj"/>
-    </ItemGroup>
-
 </Project>

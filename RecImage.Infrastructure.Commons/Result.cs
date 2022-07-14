@@ -1,10 +1,20 @@
 ﻿namespace RecImage.Infrastructure.Commons;
 
-public sealed class Result : IResult
+public class Result : IResult
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
     public int StatusCode { get; set; }
+
+    public static IResult Ok()
+    {
+        return Create(200, true);
+    }
+
+    public static IResult Bad(string message)
+    {
+        return Create(400, message: message);
+    }
 
     public static IResult Failed(string message, int code = 500)
     {
@@ -17,25 +27,22 @@ public sealed class Result : IResult
     }
 }
 
-public sealed class Result<T> : IResult<T>
+public sealed class Result<TResult> : Result, IResult<TResult>
 {
-    public bool Success { get; set; }
-    public T? Data { get; set; }
-    public string? Message { get; set; }
-    public int StatusCode { get; set; }
+    public TResult? Data { get; set; }
 
-    public static IResult<T> Ok(T? data)
+    public static IResult<TResult> Ok(TResult? data)
     {
         return Create(200, true, data);
     }
 
-    public static IResult<T> Failed(string message, int code = 500)
+    public new static IResult<TResult> Failed(string message, int code = 500)
     {
         return Create(code, message: message);
     }
 
-    private static IResult<T> Create(int statusCode, bool success = false, T? data = default, string? message = null)
+    private static IResult<TResult> Create(int statusCode, bool success = false, TResult? data = default, string? message = null)
     {
-        return new Result<T> { Data = data, Message = message, Success = success, StatusCode = statusCode };
+        return new Result<TResult> { Data = data, Message = message, Success = success, StatusCode = statusCode };
     }
 }

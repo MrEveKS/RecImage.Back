@@ -1,19 +1,18 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RecImage.ColoringService.Enums;
 using RecImage.ColoringService.Models;
 using RecImage.ColoringService.Services;
 using RecImage.ColoringService.Test.BaseTests;
-using RecImage.ColoringService.Test.Helpers;
+using RecImage.Test.Commons.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace RecImage.ColoringService.Test;
 
 [Collection("Collection ImageConverterTests")]
-public class ImageConverterTests : BaseImageTests
+public sealed class ImageConverterTests : BaseImageTests
 {
     public ImageConverterTests(ITestOutputHelper output) : base(output)
     {

@@ -1,11 +1,10 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
 
-namespace RecImage.ColoringService.Test.Helpers;
+namespace RecImage.Test.Commons.Helpers;
 
-internal class ImageGenerate
+public sealed class ImageGenerate
 {
     public static Stream GenerateGradientImage()
     {

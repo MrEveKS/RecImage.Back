@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
 namespace RecImage.ColoringService.Test.BaseTests;
@@ -7,7 +6,6 @@ namespace RecImage.ColoringService.Test.BaseTests;
 public abstract class BaseImageTests
 {
     protected readonly ITestOutputHelper Output;
-    protected readonly TimeSpan StopAfter = TimeSpan.FromSeconds(45);
 
     protected ServiceProvider ServiceProvider = null!;
 

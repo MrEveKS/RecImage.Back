@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 namespace RecImage.Business.Services;
 
 internal sealed class DirectoryService : IDirectoryService

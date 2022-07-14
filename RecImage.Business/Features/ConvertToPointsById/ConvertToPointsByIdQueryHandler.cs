@@ -32,13 +32,14 @@ internal sealed class ConvertToPointsByIdQueryHandler
     public async Task<IResult<ConvertToPointsByIdQueryResult>> Handle(
         ConvertToPointsByIdQuery request, CancellationToken cancellationToken)
     {
+        var (imageId, colored, size, colorStep) = request;
+
         try
         {
             _logger.InformationObject(request);
             var stopwatch = Stopwatch.StartNew();
 
             var imagesResult = await _mediator.Send(new GetImagesListQuery(), cancellationToken);
-
             if (!imagesResult.Success || imagesResult.Data is null)
             {
                 return Result<ConvertToPointsByIdQueryResult>
@@ -46,12 +47,12 @@ internal sealed class ConvertToPointsByIdQueryHandler
             }
 
             var fileName = imagesResult.Data
-                .FirstOrDefault(x => x.Id == request.ImageId)?.OriginalName;
+                .FirstOrDefault(x => x.Id == imageId)?.OriginalName;
 
             if (string.IsNullOrEmpty(fileName))
             {
                 return Result<ConvertToPointsByIdQueryResult>
-                    .Failed($"Convert to point by id image not found by id {request.ImageId}");
+                    .Failed($"Convert to point by id image not found by id {imageId}");
             }
 
             await using var stream = _fileService.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
@@ -59,13 +60,13 @@ internal sealed class ConvertToPointsByIdQueryHandler
                 fileName));
 
             var options = new ConvertOptions
-                { Colored = request.Colored, Size = request.Size, ColorStep = request.ColorStep };
+                { Colored = colored, Size = size, ColorStep = colorStep };
 
             var result = await _imageConverter.ConvertToColorPoints(stream, options);
             _logger.Information("ConvertToPointsByFileName time", stopwatch.Elapsed.TotalMilliseconds);
 
             return Result<ConvertToPointsByIdQueryResult>
-                .Ok(new ConvertToPointsByIdQueryResult { Cells = result.Cells, CellsColor = result.CellsColor });
+                .Ok(new ConvertToPointsByIdQueryResult(result.Cells, result.CellsColor));
         }
         catch (Exception e)
         {

@@ -23,24 +23,26 @@ internal sealed class ConvertToPointsQueryHandler
     public async Task<IResult<ConvertToPointsQueryResult>> Handle(
         ConvertToPointsQuery request, CancellationToken cancellationToken)
     {
+        var (formFile, colored, size, colorStep) = request;
+
         try
         {
             var options = new ConvertOptions
-                { Colored = request.Colored, Size = request.Size, ColorStep = request.ColorStep };
+                { Colored = colored, Size = size, ColorStep = colorStep };
             _logger.InformationObject(options);
 
             var stopwatch = Stopwatch.StartNew();
             await using var memoryStream = new MemoryStream();
-            await request.Image.CopyToAsync(memoryStream, cancellationToken);
+            await formFile.CopyToAsync(memoryStream, cancellationToken);
             var result = await _imageConverter.ConvertToColorPoints(memoryStream, options);
             _logger.Information("ConvertToPoints time", stopwatch.Elapsed.TotalMilliseconds);
 
             return Result<ConvertToPointsQueryResult>
-                .Ok(new ConvertToPointsQueryResult { Cells = result.Cells, CellsColor = result.CellsColor });
+                .Ok(new ConvertToPointsQueryResult(result.Cells, result.CellsColor));
         }
         catch (Exception e)
         {
-            _logger.ErrorObject(e, request.Image);
+            _logger.ErrorObject(e, formFile);
             return Result<ConvertToPointsQueryResult>
                 .Failed("Convert to points exception");
         }

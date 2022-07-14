@@ -8,27 +8,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="logs\**"/>
-        <Content Remove="logs\**"/>
-        <EmbeddedResource Remove="logs\**"/>
-        <None Remove="logs\**"/>
+        <Compile Remove="logs\**" />
+        <Content Remove="logs\**" />
+        <EmbeddedResource Remove="logs\**" />
+        <None Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
-        <PackageReference Include="SerilogAnalyzer" Version="0.15.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.1"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RecImage.Business\RecImage.Business.csproj"/>
+        <ProjectReference Include="..\RecImage.Business\RecImage.Business.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\image-list\min\"/>
-        <Folder Include="wwwroot\image-list\webp"/>
+        <Folder Include="wwwroot\image-list\min\" />
+        <Folder Include="wwwroot\image-list\webp" />
     </ItemGroup>
 
     <ItemGroup>

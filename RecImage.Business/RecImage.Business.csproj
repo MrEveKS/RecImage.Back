@@ -7,14 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RecImage.ColoringService\RecImage.ColoringService.csproj"/>
-        <ProjectReference Include="..\RecImage.Infrastructure.Commons\RecImage.Infrastructure.Commons.csproj"/>
-        <ProjectReference Include="..\RecImage.Infrastructure.Logger\RecImage.Infrastructure.Logger.csproj"/>
+        <ProjectReference Include="..\RecImage.ColoringService\RecImage.ColoringService.csproj" />
+        <ProjectReference Include="..\RecImage.Infrastructure.Commons\RecImage.Infrastructure.Commons.csproj" />
+        <ProjectReference Include="..\RecImage.Infrastructure.Logger\RecImage.Infrastructure.Logger.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="FluentValidation" Version="11.1.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

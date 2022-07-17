@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using System.Drawing.Imaging;
+using ImageMagick;
 using RecImage.ColoringService.Enums;
 using RecImage.ColoringService.Models;
 
@@ -23,9 +23,10 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         return ImageConvert(image, options);
     }
 
-    private async Task<Bitmap> ImageStreamConvert(Stream imageStream, ConvertOptions options)
+    private async Task<MagickImage> ImageStreamConvert(Stream imageStream, ConvertOptions options)
     {
-        var image = (Bitmap)Image.FromStream(imageStream);
+        imageStream.Position = 0;
+        var image = new MagickImage(imageStream);
         var size = CalculateNewSize(image, options.Size);
 
         var image256 = options.ColorStep switch
@@ -44,7 +45,7 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         return image256;
     }
 
-    private static ColorPoints ImageConvert(Bitmap image, ConvertOptions options)
+    private static ColorPoints ImageConvert(MagickImage image, ConvertOptions options)
     {
         var colorStep = (int)options.ColorStep;
         const int pixelSize = 1;
@@ -56,6 +57,8 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         var widthWithSeparate = image.Width - image.Width % pixelSize;
 
         var cells = new List<List<int>>(heightWithSeparate);
+
+        using var pixels = image.GetPixelsUnsafe();
 
         for (var colIndex = 0; colIndex < heightWithSeparate; colIndex += pixelSize)
         {
@@ -71,10 +74,10 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
                 {
                     for (var j = colIndex; j < colIndex + pixelSize; j++)
                     {
-                        var pixelColor = image.GetPixel(rowIndex, colIndex);
-                        red += pixelColor.R;
-                        green += pixelColor.G;
-                        blue += pixelColor.B;
+                        var pixelColor = pixels.GetPixel(rowIndex, colIndex);
+                        red += pixelColor[0]; //pixelColor.R;
+                        green += pixelColor[1]; //pixelColor.G;
+                        blue += pixelColor[2]; //pixelColor.B;
                     }
                 }
 
@@ -109,14 +112,10 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         };
     }
 
-    private static Bitmap ConvertTo256(Bitmap image)
+    private static MagickImage ConvertTo256(MagickImage image)
     {
-        var result = image.Clone(new Rectangle(0, 0, image.Width, image.Height),
-            PixelFormat.Format8bppIndexed);
-
-        image.Dispose();
-
-        return result;
+        image.Quantize(new QuantizeSettings { Colors = 256, DitherMethod = DitherMethod.No });
+        return image;
     }
 
     private void Dispose(bool disposing)
@@ -166,7 +165,7 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         return color;
     }
 
-    private static SizeF CalculateNewSize(Image image, double maxWidth)
+    private static SizeF CalculateNewSize(MagickImage image, double maxWidth)
     {
         var imageWidth = image.Width;
         var cof = maxWidth / imageWidth;
@@ -180,9 +179,8 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         };
     }
 
-    private static Bitmap ResizeImage(Image image, SizeF newSize)
+    private static MagickImage ResizeImage(MagickImage image, SizeF newSize)
     {
-        Bitmap resizedImage;
         var resizeWidth = newSize.Width / (double)image.Width;
         var resizeHeight = newSize.Height / (double)image.Height;
 
@@ -190,39 +188,22 @@ internal sealed class ImageConverter : IImageConverter, IDisposable
         {
             var newWidth = (int)(resizeWidth * image.Width);
             var newHeight = (int)(resizeWidth * image.Height);
-            resizedImage = new Bitmap(image, new Size(newWidth, newHeight));
+            image.Resize(newWidth, newHeight);
         }
         else
         {
             var newWidth = (int)(resizeHeight * image.Width);
             var newHeight = (int)(resizeHeight * image.Height);
-            resizedImage = new Bitmap(image, new Size(newWidth, newHeight));
+            image.Resize(newWidth, newHeight);
         }
 
-        image.Dispose();
-
-        return resizedImage;
+        return image;
     }
 
-    private static Bitmap GrayScale(Image image)
+    private static MagickImage GrayScale(MagickImage image)
     {
-        var bitmap = new Bitmap(image);
-
-        for (var indexWidth = 0; indexWidth < bitmap.Width; indexWidth++)
-        {
-            for (var indexHeight = 0; indexHeight < bitmap.Height; indexHeight++)
-            {
-                var grey = (int)(bitmap.GetPixel(indexWidth, indexHeight).R * 0.3
-                                 + bitmap.GetPixel(indexWidth, indexHeight).G * 0.59
-                                 + bitmap.GetPixel(indexWidth, indexHeight).B * 0.11);
-
-                bitmap.SetPixel(indexWidth, indexHeight, Color.FromArgb(grey, grey, grey));
-            }
-        }
-
-        image.Dispose();
-
-        return bitmap;
+        image.Grayscale();
+        return image;
     }
 
     private static Dictionary<int, string> ToCellsColor(Dictionary<string, int> colors)

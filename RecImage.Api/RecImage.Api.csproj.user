@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <NameOfLastUsedPublishProfile>C:\Users\eveks\source\repos\RecImage.Back\RecImage.Api\Properties\PublishProfiles\registry.hub.docker.com_eveks1.pubxml</NameOfLastUsedPublishProfile>
-    <ActiveDebugProfile>Docker</ActiveDebugProfile>
-  </PropertyGroup>
-</Project>

@@ -5,3 +5,5 @@
 /RecImage.Api.sln.DotSettings.user
 Logs
 image-list
+/RecImage.Api/Properties/PublishProfiles
+/RecImage.Api/RecImage.Api.csproj.user

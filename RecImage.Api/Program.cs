@@ -12,7 +12,7 @@ public class Program
         .AddJsonFile(
             $"appsettings.{Environment.GetEnvironmentVariable(EnvironmentConstants.AspnetcoreEnvironment) ?? EnvironmentConstants.Production}.json",
             true)
-        .AddUserSecrets<Program>(false, true)
+        .AddUserSecrets<Program>(true, true)
         .Build();
 
     public static int Main(string[] args)
